@@ -23,6 +23,11 @@ export class ProductCountAggregate {
   @TypeGraphQL.Field(_type => TypeGraphQL.Int, {
     nullable: false
   })
+  photo!: number;
+
+  @TypeGraphQL.Field(_type => TypeGraphQL.Int, {
+    nullable: false
+  })
   price!: number;
 
   @TypeGraphQL.Field(_type => TypeGraphQL.Int, {

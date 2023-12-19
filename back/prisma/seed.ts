@@ -18,6 +18,7 @@ async function main() {
       Nombre de portes	2
       Nombre de places assises	2
       Poids à vide	1 575 kg`,
+        photo: "https://images.caradisiac.com/logos-ref/modele/modele--lamborghini-aventador/S0-modele--lamborghini-aventador.jpg",
         price: 338
       }
     })
@@ -27,6 +28,7 @@ async function main() {
         createdBy: "System",
         title: 'Lamborghini Centenario',
         description: `En préCommande`,
+        photo: "https://images.caradisiac.com/logos/6/7/3/8/196738/S7-photos-du-jour-lamborghini-centenario-114211.jpg",
         price: 50
       }
     })
@@ -39,6 +41,7 @@ async function main() {
         Prix : de 180 000 € à 358 699 €
         Motorisation : Essence
         Emission de CO2 : 290 g/km*`,
+        photo: "https://images.caradisiac.com/logos-ref/modele/modele--lamborghini-huracan/S7-modele--lamborghini-huracan.jpg",
         price: 338
       }
     })
@@ -50,6 +53,7 @@ async function main() {
         description: `Commercialisé : depuis 2023
         Prix : 506 808 €
         Motorisation : Hybride essence électrique`,
+        photo: "https://images.caradisiac.com/logos-ref/modele/modele--lamborghini-revuelto/S7-modele--lamborghini-revuelto.jpg",
         price: 5
       }
     })
@@ -61,6 +65,7 @@ async function main() {
         description: `Commercialisé : depuis 2020
         Prix non communiqué...
         Motorisation : Hybride essence électrique`,
+        photo: "https://images.caradisiac.com/logos-ref/modele/modele--lamborghini-sian/S7-modele--lamborghini-sian.jpg",
         price: 12
       }
     })
@@ -74,6 +79,7 @@ async function main() {
         Motorisation : Essence
         Emission de CO2 :
         Norme NEDC`,
+        photo: "https://images.caradisiac.com/logos-ref/modele/modele--lamborghini-urus/S7-modele--lamborghini-urus.jpg",
         price: 22
       }
     })
@@ -87,6 +93,7 @@ async function main() {
         Motorisation : Essence
         Emission de CO2:
         Norme NEDC`,
+        photo: "https://images.caradisiac.com/logos-ref/modele/modele--lamborghini-gallardo/S7-modele--lamborghini-gallardo.jpg",
         price: 15
       }
     })

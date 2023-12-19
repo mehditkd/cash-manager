@@ -35,5 +35,5 @@ export class FindManyProductArgs {
   @TypeGraphQL.Field(_type => [ProductScalarFieldEnum], {
     nullable: true
   })
-  distinct?: Array<"id" | "title" | "description" | "price" | "createdBy" | "modifiedBy" | "createdAt" | "modifiedAt"> | undefined;
+  distinct?: Array<"id" | "title" | "description" | "photo" | "price" | "createdBy" | "modifiedBy" | "createdAt" | "modifiedAt"> | undefined;
 }

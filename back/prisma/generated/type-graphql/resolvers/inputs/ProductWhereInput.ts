@@ -42,6 +42,11 @@ export class ProductWhereInput {
   })
   description?: StringFilter | undefined;
 
+  @TypeGraphQL.Field(_type => StringFilter, {
+    nullable: true
+  })
+  photo?: StringFilter | undefined;
+
   @TypeGraphQL.Field(_type => FloatFilter, {
     nullable: true
   })

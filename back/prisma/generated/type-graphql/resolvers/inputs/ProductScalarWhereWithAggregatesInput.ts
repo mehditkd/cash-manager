@@ -41,6 +41,11 @@ export class ProductScalarWhereWithAggregatesInput {
   })
   description?: StringWithAggregatesFilter | undefined;
 
+  @TypeGraphQL.Field(_type => StringWithAggregatesFilter, {
+    nullable: true
+  })
+  photo?: StringWithAggregatesFilter | undefined;
+
   @TypeGraphQL.Field(_type => FloatWithAggregatesFilter, {
     nullable: true
   })

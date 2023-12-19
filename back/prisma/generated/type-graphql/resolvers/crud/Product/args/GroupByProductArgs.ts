@@ -20,7 +20,7 @@ export class GroupByProductArgs {
   @TypeGraphQL.Field(_type => [ProductScalarFieldEnum], {
     nullable: false
   })
-  by!: Array<"id" | "title" | "description" | "price" | "createdBy" | "modifiedBy" | "createdAt" | "modifiedAt">;
+  by!: Array<"id" | "title" | "description" | "photo" | "price" | "createdBy" | "modifiedBy" | "createdAt" | "modifiedAt">;
 
   @TypeGraphQL.Field(_type => ProductScalarWhereWithAggregatesInput, {
     nullable: true

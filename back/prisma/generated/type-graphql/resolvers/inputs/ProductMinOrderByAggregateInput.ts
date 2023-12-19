@@ -24,6 +24,11 @@ export class ProductMinOrderByAggregateInput {
   @TypeGraphQL.Field(_type => SortOrder, {
     nullable: true
   })
+  photo?: "asc" | "desc" | undefined;
+
+  @TypeGraphQL.Field(_type => SortOrder, {
+    nullable: true
+  })
   price?: "asc" | "desc" | undefined;
 
   @TypeGraphQL.Field(_type => SortOrder, {

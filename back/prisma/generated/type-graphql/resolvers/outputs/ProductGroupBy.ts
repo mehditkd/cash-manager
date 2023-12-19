@@ -25,6 +25,11 @@ export class ProductGroupBy {
   })
   description!: string;
 
+  @TypeGraphQL.Field(_type => String, {
+    nullable: false
+  })
+  photo!: string;
+
   @TypeGraphQL.Field(_type => TypeGraphQL.Float, {
     nullable: false
   })

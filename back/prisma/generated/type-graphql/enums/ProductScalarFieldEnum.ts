@@ -4,6 +4,7 @@ export enum ProductScalarFieldEnum {
   id = "id",
   title = "title",
   description = "description",
+  photo = "photo",
   price = "price",
   createdBy = "createdBy",
   modifiedBy = "modifiedBy",

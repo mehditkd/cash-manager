@@ -20,6 +20,11 @@ export class ProductMinAggregate {
   })
   description!: string | null;
 
+  @TypeGraphQL.Field(_type => String, {
+    nullable: true
+  })
+  photo!: string | null;
+
   @TypeGraphQL.Field(_type => TypeGraphQL.Float, {
     nullable: true
   })
