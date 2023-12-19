@@ -1,0 +1,568 @@
+From b550de0066d9bf84f105ca0c4775953d9d5090a8 Mon Sep 17 00:00:00 2001
+From: arnaud <gadbin.arnaud8@gmail.com>
+Date: Tue, 19 Dec 2023 11:01:06 +0100
+Subject: [PATCH] added photo product field
+
+---
+ back/prisma/generated/type-graphql/enhance.ts | 36 +++++++++----------
+ .../enums/ProductScalarFieldEnum.ts           |  1 +
+ .../generated/type-graphql/models/Product.ts  |  5 +++
+ .../crud/Product/args/FindFirstProductArgs.ts |  2 +-
+ .../args/FindFirstProductOrThrowArgs.ts       |  2 +-
+ .../crud/Product/args/FindManyProductArgs.ts  |  2 +-
+ .../crud/Product/args/GroupByProductArgs.ts   |  2 +-
+ .../ProductCountOrderByAggregateInput.ts      |  5 +++
+ .../resolvers/inputs/ProductCreateInput.ts    |  5 +++
+ .../inputs/ProductCreateManyInput.ts          |  5 +++
+ .../ProductCreateWithoutCartRowsInput.ts      |  5 +++
+ .../inputs/ProductMaxOrderByAggregateInput.ts |  5 +++
+ .../inputs/ProductMinOrderByAggregateInput.ts |  5 +++
+ .../ProductOrderByWithAggregationInput.ts     |  5 +++
+ .../inputs/ProductOrderByWithRelationInput.ts |  5 +++
+ .../ProductScalarWhereWithAggregatesInput.ts  |  5 +++
+ .../resolvers/inputs/ProductUpdateInput.ts    |  5 +++
+ .../inputs/ProductUpdateManyMutationInput.ts  |  5 +++
+ .../ProductUpdateWithoutCartRowsInput.ts      |  5 +++
+ .../resolvers/inputs/ProductWhereInput.ts     |  5 +++
+ .../outputs/ProductCountAggregate.ts          |  5 +++
+ .../resolvers/outputs/ProductGroupBy.ts       |  5 +++
+ .../resolvers/outputs/ProductMaxAggregate.ts  |  5 +++
+ .../resolvers/outputs/ProductMinAggregate.ts  |  5 +++
+ .../migration.sql                             |  8 +++++
+ back/prisma/schema.prisma                     |  1 +
+ back/prisma/seed.ts                           |  7 ++++
+ 27 files changed, 129 insertions(+), 22 deletions(-)
+ create mode 100644 back/prisma/migrations/20231219100045_added_photo_product_field/migration.sql
+
+diff --git a/back/prisma/generated/type-graphql/enhance.ts b/back/prisma/generated/type-graphql/enhance.ts
+index 6f9f407..924bba1 100644
+--- a/back/prisma/generated/type-graphql/enhance.ts
++++ b/back/prisma/generated/type-graphql/enhance.ts
+@@ -420,7 +420,7 @@ const modelsInfo = {
+   Provider: ["provider", "createdBy", "createdAt", "modifiedBy", "modifiedAt", "userId"],
+   Cart: ["id", "totalPrice", "cartStatus", "refusalCount", "userId", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+   CartRows: ["id", "rowPrice", "quantity", "cartId", "productId", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+-  Product: ["id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"]
++  Product: ["id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"]
+ };
+ 
+ type ModelNames = keyof typeof models;
+@@ -470,7 +470,7 @@ const outputsInfo = {
+   AggregateCartRows: ["_count", "_avg", "_sum", "_min", "_max"],
+   CartRowsGroupBy: ["id", "rowPrice", "quantity", "cartId", "productId", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "_count", "_avg", "_sum", "_min", "_max"],
+   AggregateProduct: ["_count", "_avg", "_sum", "_min", "_max"],
+-  ProductGroupBy: ["id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "_count", "_avg", "_sum", "_min", "_max"],
++  ProductGroupBy: ["id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "_count", "_avg", "_sum", "_min", "_max"],
+   AffectedRowsOutput: ["count"],
+   UserCount: ["carts", "providers"],
+   UserCountAggregate: ["id", "email", "userName", "displayName", "imageUrl", "emailConfirmed", "accessTokenExpiresUtc", "accessToken", "password", "oneTimePassword", "state", "createdAt", "modifiedAt", "createdBy", "modifiedBy", "refreshTokenId", "_all"],
+@@ -494,11 +494,11 @@ const outputsInfo = {
+   CartRowsMinAggregate: ["id", "rowPrice", "quantity", "cartId", "productId", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+   CartRowsMaxAggregate: ["id", "rowPrice", "quantity", "cartId", "productId", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+   ProductCount: ["cartRows"],
+-  ProductCountAggregate: ["id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "_all"],
++  ProductCountAggregate: ["id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "_all"],
+   ProductAvgAggregate: ["id", "price"],
+   ProductSumAggregate: ["id", "price"],
+-  ProductMinAggregate: ["id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+-  ProductMaxAggregate: ["id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"]
++  ProductMinAggregate: ["id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
++  ProductMaxAggregate: ["id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"]
+ };
+ 
+ type OutputTypesNames = keyof typeof outputTypes;
+@@ -564,11 +564,11 @@ const inputsInfo = {
+   CartRowsWhereUniqueInput: ["id"],
+   CartRowsOrderByWithAggregationInput: ["id", "rowPrice", "quantity", "cartId", "productId", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "_count", "_avg", "_max", "_min", "_sum"],
+   CartRowsScalarWhereWithAggregatesInput: ["AND", "OR", "NOT", "id", "rowPrice", "quantity", "cartId", "productId", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+-  ProductWhereInput: ["AND", "OR", "NOT", "id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "cartRows"],
+-  ProductOrderByWithRelationInput: ["id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "cartRows"],
++  ProductWhereInput: ["AND", "OR", "NOT", "id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "cartRows"],
++  ProductOrderByWithRelationInput: ["id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "cartRows"],
+   ProductWhereUniqueInput: ["id"],
+-  ProductOrderByWithAggregationInput: ["id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "_count", "_avg", "_max", "_min", "_sum"],
+-  ProductScalarWhereWithAggregatesInput: ["AND", "OR", "NOT", "id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
++  ProductOrderByWithAggregationInput: ["id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "_count", "_avg", "_max", "_min", "_sum"],
++  ProductScalarWhereWithAggregatesInput: ["AND", "OR", "NOT", "id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+   UserCreateInput: ["id", "email", "userName", "displayName", "imageUrl", "emailConfirmed", "accessTokenExpiresUtc", "accessToken", "password", "oneTimePassword", "state", "createdAt", "modifiedAt", "createdBy", "modifiedBy", "refreshTokenId", "carts", "providers", "refreshToken"],
+   UserUpdateInput: ["id", "email", "userName", "displayName", "imageUrl", "emailConfirmed", "accessTokenExpiresUtc", "accessToken", "password", "oneTimePassword", "state", "createdAt", "modifiedAt", "createdBy", "modifiedBy", "refreshTokenId", "carts", "providers", "refreshToken"],
+   UserCreateManyInput: ["id", "email", "userName", "displayName", "imageUrl", "emailConfirmed", "accessTokenExpiresUtc", "accessToken", "password", "oneTimePassword", "state", "createdAt", "modifiedAt", "createdBy", "modifiedBy", "refreshTokenId"],
+@@ -589,10 +589,10 @@ const inputsInfo = {
+   CartRowsUpdateInput: ["id", "rowPrice", "quantity", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "cart", "product"],
+   CartRowsCreateManyInput: ["id", "rowPrice", "quantity", "cartId", "productId", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+   CartRowsUpdateManyMutationInput: ["id", "rowPrice", "quantity", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+-  ProductCreateInput: ["id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "cartRows"],
+-  ProductUpdateInput: ["id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "cartRows"],
+-  ProductCreateManyInput: ["id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+-  ProductUpdateManyMutationInput: ["id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
++  ProductCreateInput: ["id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "cartRows"],
++  ProductUpdateInput: ["id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "cartRows"],
++  ProductCreateManyInput: ["id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
++  ProductUpdateManyMutationInput: ["id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+   StringFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "contains", "startsWith", "endsWith", "mode", "not"],
+   StringNullableFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "contains", "startsWith", "endsWith", "mode", "not"],
+   BoolFilter: ["equals", "not"],
+@@ -638,10 +638,10 @@ const inputsInfo = {
+   CartRowsMaxOrderByAggregateInput: ["id", "rowPrice", "quantity", "cartId", "productId", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+   CartRowsMinOrderByAggregateInput: ["id", "rowPrice", "quantity", "cartId", "productId", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+   CartRowsSumOrderByAggregateInput: ["id", "rowPrice", "quantity", "cartId", "productId"],
+-  ProductCountOrderByAggregateInput: ["id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
++  ProductCountOrderByAggregateInput: ["id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+   ProductAvgOrderByAggregateInput: ["id", "price"],
+-  ProductMaxOrderByAggregateInput: ["id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+-  ProductMinOrderByAggregateInput: ["id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
++  ProductMaxOrderByAggregateInput: ["id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
++  ProductMinOrderByAggregateInput: ["id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+   ProductSumOrderByAggregateInput: ["id", "price"],
+   CartCreateNestedManyWithoutUserInput: ["create", "connectOrCreate", "createMany", "connect"],
+   ProviderCreateNestedManyWithoutUserInput: ["create", "connectOrCreate", "createMany", "connect"],
+@@ -725,12 +725,12 @@ const inputsInfo = {
+   UserUpdateWithoutCartsInput: ["id", "email", "userName", "displayName", "imageUrl", "emailConfirmed", "accessTokenExpiresUtc", "accessToken", "password", "oneTimePassword", "state", "createdAt", "modifiedAt", "createdBy", "modifiedBy", "refreshTokenId", "providers", "refreshToken"],
+   CartCreateWithoutCartRowsInput: ["id", "totalPrice", "cartStatus", "refusalCount", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "user"],
+   CartCreateOrConnectWithoutCartRowsInput: ["where", "create"],
+-  ProductCreateWithoutCartRowsInput: ["id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
++  ProductCreateWithoutCartRowsInput: ["id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+   ProductCreateOrConnectWithoutCartRowsInput: ["where", "create"],
+   CartUpsertWithoutCartRowsInput: ["update", "create"],
+   CartUpdateWithoutCartRowsInput: ["id", "totalPrice", "cartStatus", "refusalCount", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "user"],
+   ProductUpsertWithoutCartRowsInput: ["update", "create"],
+-  ProductUpdateWithoutCartRowsInput: ["id", "title", "description", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
++  ProductUpdateWithoutCartRowsInput: ["id", "title", "description", "photo", "price", "createdBy", "modifiedBy", "createdAt", "modifiedAt"],
+   CartRowsCreateWithoutProductInput: ["id", "rowPrice", "quantity", "createdBy", "modifiedBy", "createdAt", "modifiedAt", "cart"],
+   CartRowsCreateOrConnectWithoutProductInput: ["where", "create"],
+   CartRowsCreateManyProductInputEnvelope: ["data", "skipDuplicates"],
+diff --git a/back/prisma/generated/type-graphql/enums/ProductScalarFieldEnum.ts b/back/prisma/generated/type-graphql/enums/ProductScalarFieldEnum.ts
+index ff3f4b3..15841ef 100644
+--- a/back/prisma/generated/type-graphql/enums/ProductScalarFieldEnum.ts
++++ b/back/prisma/generated/type-graphql/enums/ProductScalarFieldEnum.ts
+@@ -4,6 +4,7 @@ export enum ProductScalarFieldEnum {
+   id = "id",
+   title = "title",
+   description = "description",
++  photo = "photo",
+   price = "price",
+   createdBy = "createdBy",
+   modifiedBy = "modifiedBy",
+diff --git a/back/prisma/generated/type-graphql/models/Product.ts b/back/prisma/generated/type-graphql/models/Product.ts
+index b9f45d8..071326d 100644
+--- a/back/prisma/generated/type-graphql/models/Product.ts
++++ b/back/prisma/generated/type-graphql/models/Product.ts
+@@ -22,6 +22,11 @@ export class Product {
+   })
+   description!: string;
+ 
++  @TypeGraphQL.Field(_type => String, {
++    nullable: false
++  })
++  photo!: string;
++
+   @TypeGraphQL.Field(_type => TypeGraphQL.Float, {
+     nullable: false
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/crud/Product/args/FindFirstProductArgs.ts b/back/prisma/generated/type-graphql/resolvers/crud/Product/args/FindFirstProductArgs.ts
+index ad694fc..a485df3 100644
+--- a/back/prisma/generated/type-graphql/resolvers/crud/Product/args/FindFirstProductArgs.ts
++++ b/back/prisma/generated/type-graphql/resolvers/crud/Product/args/FindFirstProductArgs.ts
+@@ -35,5 +35,5 @@ export class FindFirstProductArgs {
+   @TypeGraphQL.Field(_type => [ProductScalarFieldEnum], {
+     nullable: true
+   })
+-  distinct?: Array<"id" | "title" | "description" | "price" | "createdBy" | "modifiedBy" | "createdAt" | "modifiedAt"> | undefined;
++  distinct?: Array<"id" | "title" | "description" | "photo" | "price" | "createdBy" | "modifiedBy" | "createdAt" | "modifiedAt"> | undefined;
+ }
+diff --git a/back/prisma/generated/type-graphql/resolvers/crud/Product/args/FindFirstProductOrThrowArgs.ts b/back/prisma/generated/type-graphql/resolvers/crud/Product/args/FindFirstProductOrThrowArgs.ts
+index 6802841..405c9e0 100644
+--- a/back/prisma/generated/type-graphql/resolvers/crud/Product/args/FindFirstProductOrThrowArgs.ts
++++ b/back/prisma/generated/type-graphql/resolvers/crud/Product/args/FindFirstProductOrThrowArgs.ts
+@@ -35,5 +35,5 @@ export class FindFirstProductOrThrowArgs {
+   @TypeGraphQL.Field(_type => [ProductScalarFieldEnum], {
+     nullable: true
+   })
+-  distinct?: Array<"id" | "title" | "description" | "price" | "createdBy" | "modifiedBy" | "createdAt" | "modifiedAt"> | undefined;
++  distinct?: Array<"id" | "title" | "description" | "photo" | "price" | "createdBy" | "modifiedBy" | "createdAt" | "modifiedAt"> | undefined;
+ }
+diff --git a/back/prisma/generated/type-graphql/resolvers/crud/Product/args/FindManyProductArgs.ts b/back/prisma/generated/type-graphql/resolvers/crud/Product/args/FindManyProductArgs.ts
+index 81e67b9..ea0a1f9 100644
+--- a/back/prisma/generated/type-graphql/resolvers/crud/Product/args/FindManyProductArgs.ts
++++ b/back/prisma/generated/type-graphql/resolvers/crud/Product/args/FindManyProductArgs.ts
+@@ -35,5 +35,5 @@ export class FindManyProductArgs {
+   @TypeGraphQL.Field(_type => [ProductScalarFieldEnum], {
+     nullable: true
+   })
+-  distinct?: Array<"id" | "title" | "description" | "price" | "createdBy" | "modifiedBy" | "createdAt" | "modifiedAt"> | undefined;
++  distinct?: Array<"id" | "title" | "description" | "photo" | "price" | "createdBy" | "modifiedBy" | "createdAt" | "modifiedAt"> | undefined;
+ }
+diff --git a/back/prisma/generated/type-graphql/resolvers/crud/Product/args/GroupByProductArgs.ts b/back/prisma/generated/type-graphql/resolvers/crud/Product/args/GroupByProductArgs.ts
+index 28903cc..2f71255 100644
+--- a/back/prisma/generated/type-graphql/resolvers/crud/Product/args/GroupByProductArgs.ts
++++ b/back/prisma/generated/type-graphql/resolvers/crud/Product/args/GroupByProductArgs.ts
+@@ -20,7 +20,7 @@ export class GroupByProductArgs {
+   @TypeGraphQL.Field(_type => [ProductScalarFieldEnum], {
+     nullable: false
+   })
+-  by!: Array<"id" | "title" | "description" | "price" | "createdBy" | "modifiedBy" | "createdAt" | "modifiedAt">;
++  by!: Array<"id" | "title" | "description" | "photo" | "price" | "createdBy" | "modifiedBy" | "createdAt" | "modifiedAt">;
+ 
+   @TypeGraphQL.Field(_type => ProductScalarWhereWithAggregatesInput, {
+     nullable: true
+diff --git a/back/prisma/generated/type-graphql/resolvers/inputs/ProductCountOrderByAggregateInput.ts b/back/prisma/generated/type-graphql/resolvers/inputs/ProductCountOrderByAggregateInput.ts
+index 1dec48e..e47d5ba 100644
+--- a/back/prisma/generated/type-graphql/resolvers/inputs/ProductCountOrderByAggregateInput.ts
++++ b/back/prisma/generated/type-graphql/resolvers/inputs/ProductCountOrderByAggregateInput.ts
+@@ -21,6 +21,11 @@ export class ProductCountOrderByAggregateInput {
+   })
+   description?: "asc" | "desc" | undefined;
+ 
++  @TypeGraphQL.Field(_type => SortOrder, {
++    nullable: true
++  })
++  photo?: "asc" | "desc" | undefined;
++
+   @TypeGraphQL.Field(_type => SortOrder, {
+     nullable: true
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/inputs/ProductCreateInput.ts b/back/prisma/generated/type-graphql/resolvers/inputs/ProductCreateInput.ts
+index 2501efc..f9c76db 100644
+--- a/back/prisma/generated/type-graphql/resolvers/inputs/ProductCreateInput.ts
++++ b/back/prisma/generated/type-graphql/resolvers/inputs/ProductCreateInput.ts
+@@ -21,6 +21,11 @@ export class ProductCreateInput {
+   })
+   description!: string;
+ 
++  @TypeGraphQL.Field(_type => String, {
++    nullable: false
++  })
++  photo!: string;
++
+   @TypeGraphQL.Field(_type => TypeGraphQL.Float, {
+     nullable: true
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/inputs/ProductCreateManyInput.ts b/back/prisma/generated/type-graphql/resolvers/inputs/ProductCreateManyInput.ts
+index 922a0e9..86ad4f3 100644
+--- a/back/prisma/generated/type-graphql/resolvers/inputs/ProductCreateManyInput.ts
++++ b/back/prisma/generated/type-graphql/resolvers/inputs/ProductCreateManyInput.ts
+@@ -20,6 +20,11 @@ export class ProductCreateManyInput {
+   })
+   description!: string;
+ 
++  @TypeGraphQL.Field(_type => String, {
++    nullable: false
++  })
++  photo!: string;
++
+   @TypeGraphQL.Field(_type => TypeGraphQL.Float, {
+     nullable: true
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/inputs/ProductCreateWithoutCartRowsInput.ts b/back/prisma/generated/type-graphql/resolvers/inputs/ProductCreateWithoutCartRowsInput.ts
+index ba0ecf6..924c094 100644
+--- a/back/prisma/generated/type-graphql/resolvers/inputs/ProductCreateWithoutCartRowsInput.ts
++++ b/back/prisma/generated/type-graphql/resolvers/inputs/ProductCreateWithoutCartRowsInput.ts
+@@ -20,6 +20,11 @@ export class ProductCreateWithoutCartRowsInput {
+   })
+   description!: string;
+ 
++  @TypeGraphQL.Field(_type => String, {
++    nullable: false
++  })
++  photo!: string;
++
+   @TypeGraphQL.Field(_type => TypeGraphQL.Float, {
+     nullable: true
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/inputs/ProductMaxOrderByAggregateInput.ts b/back/prisma/generated/type-graphql/resolvers/inputs/ProductMaxOrderByAggregateInput.ts
+index 4d82ee9..3f8069e 100644
+--- a/back/prisma/generated/type-graphql/resolvers/inputs/ProductMaxOrderByAggregateInput.ts
++++ b/back/prisma/generated/type-graphql/resolvers/inputs/ProductMaxOrderByAggregateInput.ts
+@@ -21,6 +21,11 @@ export class ProductMaxOrderByAggregateInput {
+   })
+   description?: "asc" | "desc" | undefined;
+ 
++  @TypeGraphQL.Field(_type => SortOrder, {
++    nullable: true
++  })
++  photo?: "asc" | "desc" | undefined;
++
+   @TypeGraphQL.Field(_type => SortOrder, {
+     nullable: true
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/inputs/ProductMinOrderByAggregateInput.ts b/back/prisma/generated/type-graphql/resolvers/inputs/ProductMinOrderByAggregateInput.ts
+index 0588f72..735bfef 100644
+--- a/back/prisma/generated/type-graphql/resolvers/inputs/ProductMinOrderByAggregateInput.ts
++++ b/back/prisma/generated/type-graphql/resolvers/inputs/ProductMinOrderByAggregateInput.ts
+@@ -21,6 +21,11 @@ export class ProductMinOrderByAggregateInput {
+   })
+   description?: "asc" | "desc" | undefined;
+ 
++  @TypeGraphQL.Field(_type => SortOrder, {
++    nullable: true
++  })
++  photo?: "asc" | "desc" | undefined;
++
+   @TypeGraphQL.Field(_type => SortOrder, {
+     nullable: true
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/inputs/ProductOrderByWithAggregationInput.ts b/back/prisma/generated/type-graphql/resolvers/inputs/ProductOrderByWithAggregationInput.ts
+index d726ba3..709cf99 100644
+--- a/back/prisma/generated/type-graphql/resolvers/inputs/ProductOrderByWithAggregationInput.ts
++++ b/back/prisma/generated/type-graphql/resolvers/inputs/ProductOrderByWithAggregationInput.ts
+@@ -27,6 +27,11 @@ export class ProductOrderByWithAggregationInput {
+   })
+   description?: "asc" | "desc" | undefined;
+ 
++  @TypeGraphQL.Field(_type => SortOrder, {
++    nullable: true
++  })
++  photo?: "asc" | "desc" | undefined;
++
+   @TypeGraphQL.Field(_type => SortOrder, {
+     nullable: true
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/inputs/ProductOrderByWithRelationInput.ts b/back/prisma/generated/type-graphql/resolvers/inputs/ProductOrderByWithRelationInput.ts
+index 3fb2878..8a99e24 100644
+--- a/back/prisma/generated/type-graphql/resolvers/inputs/ProductOrderByWithRelationInput.ts
++++ b/back/prisma/generated/type-graphql/resolvers/inputs/ProductOrderByWithRelationInput.ts
+@@ -23,6 +23,11 @@ export class ProductOrderByWithRelationInput {
+   })
+   description?: "asc" | "desc" | undefined;
+ 
++  @TypeGraphQL.Field(_type => SortOrder, {
++    nullable: true
++  })
++  photo?: "asc" | "desc" | undefined;
++
+   @TypeGraphQL.Field(_type => SortOrder, {
+     nullable: true
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/inputs/ProductScalarWhereWithAggregatesInput.ts b/back/prisma/generated/type-graphql/resolvers/inputs/ProductScalarWhereWithAggregatesInput.ts
+index 724bbd5..2aad1a5 100644
+--- a/back/prisma/generated/type-graphql/resolvers/inputs/ProductScalarWhereWithAggregatesInput.ts
++++ b/back/prisma/generated/type-graphql/resolvers/inputs/ProductScalarWhereWithAggregatesInput.ts
+@@ -41,6 +41,11 @@ export class ProductScalarWhereWithAggregatesInput {
+   })
+   description?: StringWithAggregatesFilter | undefined;
+ 
++  @TypeGraphQL.Field(_type => StringWithAggregatesFilter, {
++    nullable: true
++  })
++  photo?: StringWithAggregatesFilter | undefined;
++
+   @TypeGraphQL.Field(_type => FloatWithAggregatesFilter, {
+     nullable: true
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/inputs/ProductUpdateInput.ts b/back/prisma/generated/type-graphql/resolvers/inputs/ProductUpdateInput.ts
+index c9626c7..a461550 100644
+--- a/back/prisma/generated/type-graphql/resolvers/inputs/ProductUpdateInput.ts
++++ b/back/prisma/generated/type-graphql/resolvers/inputs/ProductUpdateInput.ts
+@@ -21,6 +21,11 @@ export class ProductUpdateInput {
+   })
+   description?: string | undefined;
+ 
++  @TypeGraphQL.Field(_type => String, {
++    nullable: true
++  })
++  photo?: string | undefined;
++
+   @TypeGraphQL.Field(_type => TypeGraphQL.Float, {
+     nullable: true
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/inputs/ProductUpdateManyMutationInput.ts b/back/prisma/generated/type-graphql/resolvers/inputs/ProductUpdateManyMutationInput.ts
+index 40fb161..68875b2 100644
+--- a/back/prisma/generated/type-graphql/resolvers/inputs/ProductUpdateManyMutationInput.ts
++++ b/back/prisma/generated/type-graphql/resolvers/inputs/ProductUpdateManyMutationInput.ts
+@@ -20,6 +20,11 @@ export class ProductUpdateManyMutationInput {
+   })
+   description?: string | undefined;
+ 
++  @TypeGraphQL.Field(_type => String, {
++    nullable: true
++  })
++  photo?: string | undefined;
++
+   @TypeGraphQL.Field(_type => TypeGraphQL.Float, {
+     nullable: true
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/inputs/ProductUpdateWithoutCartRowsInput.ts b/back/prisma/generated/type-graphql/resolvers/inputs/ProductUpdateWithoutCartRowsInput.ts
+index 5726e11..978f91b 100644
+--- a/back/prisma/generated/type-graphql/resolvers/inputs/ProductUpdateWithoutCartRowsInput.ts
++++ b/back/prisma/generated/type-graphql/resolvers/inputs/ProductUpdateWithoutCartRowsInput.ts
+@@ -20,6 +20,11 @@ export class ProductUpdateWithoutCartRowsInput {
+   })
+   description?: string | undefined;
+ 
++  @TypeGraphQL.Field(_type => String, {
++    nullable: true
++  })
++  photo?: string | undefined;
++
+   @TypeGraphQL.Field(_type => TypeGraphQL.Float, {
+     nullable: true
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/inputs/ProductWhereInput.ts b/back/prisma/generated/type-graphql/resolvers/inputs/ProductWhereInput.ts
+index 35225aa..c0af9c6 100644
+--- a/back/prisma/generated/type-graphql/resolvers/inputs/ProductWhereInput.ts
++++ b/back/prisma/generated/type-graphql/resolvers/inputs/ProductWhereInput.ts
+@@ -42,6 +42,11 @@ export class ProductWhereInput {
+   })
+   description?: StringFilter | undefined;
+ 
++  @TypeGraphQL.Field(_type => StringFilter, {
++    nullable: true
++  })
++  photo?: StringFilter | undefined;
++
+   @TypeGraphQL.Field(_type => FloatFilter, {
+     nullable: true
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/outputs/ProductCountAggregate.ts b/back/prisma/generated/type-graphql/resolvers/outputs/ProductCountAggregate.ts
+index cfc59bc..e5d1404 100644
+--- a/back/prisma/generated/type-graphql/resolvers/outputs/ProductCountAggregate.ts
++++ b/back/prisma/generated/type-graphql/resolvers/outputs/ProductCountAggregate.ts
+@@ -20,6 +20,11 @@ export class ProductCountAggregate {
+   })
+   description!: number;
+ 
++  @TypeGraphQL.Field(_type => TypeGraphQL.Int, {
++    nullable: false
++  })
++  photo!: number;
++
+   @TypeGraphQL.Field(_type => TypeGraphQL.Int, {
+     nullable: false
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/outputs/ProductGroupBy.ts b/back/prisma/generated/type-graphql/resolvers/outputs/ProductGroupBy.ts
+index 0a4fd04..5d8c0b2 100644
+--- a/back/prisma/generated/type-graphql/resolvers/outputs/ProductGroupBy.ts
++++ b/back/prisma/generated/type-graphql/resolvers/outputs/ProductGroupBy.ts
+@@ -25,6 +25,11 @@ export class ProductGroupBy {
+   })
+   description!: string;
+ 
++  @TypeGraphQL.Field(_type => String, {
++    nullable: false
++  })
++  photo!: string;
++
+   @TypeGraphQL.Field(_type => TypeGraphQL.Float, {
+     nullable: false
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/outputs/ProductMaxAggregate.ts b/back/prisma/generated/type-graphql/resolvers/outputs/ProductMaxAggregate.ts
+index 00a3227..09d8aae 100644
+--- a/back/prisma/generated/type-graphql/resolvers/outputs/ProductMaxAggregate.ts
++++ b/back/prisma/generated/type-graphql/resolvers/outputs/ProductMaxAggregate.ts
+@@ -20,6 +20,11 @@ export class ProductMaxAggregate {
+   })
+   description!: string | null;
+ 
++  @TypeGraphQL.Field(_type => String, {
++    nullable: true
++  })
++  photo!: string | null;
++
+   @TypeGraphQL.Field(_type => TypeGraphQL.Float, {
+     nullable: true
+   })
+diff --git a/back/prisma/generated/type-graphql/resolvers/outputs/ProductMinAggregate.ts b/back/prisma/generated/type-graphql/resolvers/outputs/ProductMinAggregate.ts
+index 26fc2bf..55ba554 100644
+--- a/back/prisma/generated/type-graphql/resolvers/outputs/ProductMinAggregate.ts
++++ b/back/prisma/generated/type-graphql/resolvers/outputs/ProductMinAggregate.ts
+@@ -20,6 +20,11 @@ export class ProductMinAggregate {
+   })
+   description!: string | null;
+ 
++  @TypeGraphQL.Field(_type => String, {
++    nullable: true
++  })
++  photo!: string | null;
++
+   @TypeGraphQL.Field(_type => TypeGraphQL.Float, {
+     nullable: true
+   })
+diff --git a/back/prisma/migrations/20231219100045_added_photo_product_field/migration.sql b/back/prisma/migrations/20231219100045_added_photo_product_field/migration.sql
+new file mode 100644
+index 0000000..afd7ec1
+--- /dev/null
++++ b/back/prisma/migrations/20231219100045_added_photo_product_field/migration.sql
+@@ -0,0 +1,8 @@
++/*
++  Warnings:
++
++  - Added the required column `photo` to the `Product` table without a default value. This is not possible if the table is not empty.
++
++*/
++-- AlterTable
++ALTER TABLE "Product" ADD COLUMN     "photo" TEXT NOT NULL;
+diff --git a/back/prisma/schema.prisma b/back/prisma/schema.prisma
+index 31f8b2c..f7a398b 100644
+--- a/back/prisma/schema.prisma
++++ b/back/prisma/schema.prisma
+@@ -100,6 +100,7 @@ model Product {
+   id          BigInt     @id @default(autoincrement())
+   title       String
+   description String
++  photo       String
+   price       Float      @default(0)
+   cartRows    CartRows[] @relation("cartRows")
+   createdBy   String
+diff --git a/back/prisma/seed.ts b/back/prisma/seed.ts
+index e7374ec..348fca5 100644
+--- a/back/prisma/seed.ts
++++ b/back/prisma/seed.ts
+@@ -18,6 +18,7 @@ async function main() {
+       Nombre de portes	2
+       Nombre de places assises	2
+       Poids à vide	1 575 kg`,
++        photo: "https://images.caradisiac.com/logos-ref/modele/modele--lamborghini-aventador/S0-modele--lamborghini-aventador.jpg",
+         price: 338
+       }
+     })
+@@ -27,6 +28,7 @@ async function main() {
+         createdBy: "System",
+         title: 'Lamborghini Centenario',
+         description: `En préCommande`,
++        photo: "https://images.caradisiac.com/logos/6/7/3/8/196738/S7-photos-du-jour-lamborghini-centenario-114211.jpg",
+         price: 50
+       }
+     })
+@@ -39,6 +41,7 @@ async function main() {
+         Prix : de 180 000 € à 358 699 €
+         Motorisation : Essence
+         Emission de CO2 : 290 g/km*`,
++        photo: "https://images.caradisiac.com/logos-ref/modele/modele--lamborghini-huracan/S7-modele--lamborghini-huracan.jpg",
+         price: 338
+       }
+     })
+@@ -50,6 +53,7 @@ async function main() {
+         description: `Commercialisé : depuis 2023
+         Prix : 506 808 €
+         Motorisation : Hybride essence électrique`,
++        photo: "https://images.caradisiac.com/logos-ref/modele/modele--lamborghini-revuelto/S7-modele--lamborghini-revuelto.jpg",
+         price: 5
+       }
+     })
+@@ -61,6 +65,7 @@ async function main() {
+         description: `Commercialisé : depuis 2020
+         Prix non communiqué...
+         Motorisation : Hybride essence électrique`,
++        photo: "https://images.caradisiac.com/logos-ref/modele/modele--lamborghini-sian/S7-modele--lamborghini-sian.jpg",
+         price: 12
+       }
+     })
+@@ -74,6 +79,7 @@ async function main() {
+         Motorisation : Essence
+         Emission de CO2 :
+         Norme NEDC`,
++        photo: "https://images.caradisiac.com/logos-ref/modele/modele--lamborghini-urus/S7-modele--lamborghini-urus.jpg",
+         price: 22
+       }
+     })
+@@ -87,6 +93,7 @@ async function main() {
+         Motorisation : Essence
+         Emission de CO2:
+         Norme NEDC`,
++        photo: "https://images.caradisiac.com/logos-ref/modele/modele--lamborghini-gallardo/S7-modele--lamborghini-gallardo.jpg",
+         price: 15
+       }
+     })
+-- 
+2.39.3 (Apple Git-146)
+
