@@ -27,12 +27,13 @@ export class UserCrudResolver {
   })
   async aggregateUser(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: AggregateUserArgs): Promise<AggregateUser> {
     await onIntercept('User', 'aggregateUser', 'onBefore', 'aggregate', ctx, args)
-    const result = getPrismaFromContext(ctx).user.aggregate({
+    const prisma = getPrismaFromContext(ctx)
+    const result = prisma.user.aggregate({
       ...args,
       ...transformInfoIntoPrismaArgs(info)
     })
-    await onIntercept('User', 'aggregateUser', 'onAfter', 'aggregate', ctx, args)
-    return result
+    const afterInterceptResult = await onIntercept('User', 'aggregateUser', 'onAfter', 'aggregate', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Mutation(_returns => AffectedRowsOutput, {
@@ -41,12 +42,14 @@ export class UserCrudResolver {
   async createManyUser(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreateManyUserArgs): Promise<AffectedRowsOutput> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'createManyUser', 'onBefore', 'createMany', ctx, args)
-    const result = await getPrismaFromContext(ctx).user.createMany({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.user.createMany({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('User', 'createManyUser', 'onAfter', 'createMany', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('User', 'createManyUser', 'onAfter', 'createMany', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Mutation(_returns => User, {
@@ -55,12 +58,14 @@ export class UserCrudResolver {
   async createOneUser(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreateOneUserArgs): Promise<User> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'createOneUser', 'onBefore', 'create', ctx, args)
-    const result = await getPrismaFromContext(ctx).user.create({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.user.create({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('User', 'createOneUser', 'onAfter', 'create', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('User', 'createOneUser', 'onAfter', 'create', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Mutation(_returns => AffectedRowsOutput, {
@@ -69,12 +74,14 @@ export class UserCrudResolver {
   async deleteManyUser(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: DeleteManyUserArgs): Promise<AffectedRowsOutput> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'deleteManyUser', 'onBefore', 'deleteMany', ctx, args)
-    const result = await getPrismaFromContext(ctx).user.deleteMany({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.user.deleteMany({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('User', 'deleteManyUser', 'onAfter', 'deleteMany', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('User', 'deleteManyUser', 'onAfter', 'deleteMany', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Mutation(_returns => User, {
@@ -83,12 +90,14 @@ export class UserCrudResolver {
   async deleteOneUser(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: DeleteOneUserArgs): Promise<User | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'deleteOneUser', 'onBefore', 'delete', ctx, args)
-    const result = await getPrismaFromContext(ctx).user.delete({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.user.delete({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('User', 'deleteOneUser', 'onAfter', 'delete', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('User', 'deleteOneUser', 'onAfter', 'delete', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Query(_returns => User, {
@@ -97,12 +106,14 @@ export class UserCrudResolver {
   async findFirstUser(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindFirstUserArgs): Promise<User | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'findFirstUser', 'onBefore', 'findFirst', ctx, args)
-    const result = await getPrismaFromContext(ctx).user.findFirst({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.user.findFirst({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('User', 'findFirstUser', 'onAfter', 'findFirst', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('User', 'findFirstUser', 'onAfter', 'findFirst', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Query(_returns => User, {
@@ -111,12 +122,14 @@ export class UserCrudResolver {
   async findFirstUserOrThrow(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindFirstUserOrThrowArgs): Promise<User | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'findFirstUserOrThrow', 'onBefore', 'findFirstOrThrow', ctx, args)
-    const result = await getPrismaFromContext(ctx).user.findFirstOrThrow({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.user.findFirstOrThrow({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('User', 'findFirstUserOrThrow', 'onAfter', 'findFirstOrThrow', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('User', 'findFirstUserOrThrow', 'onAfter', 'findFirstOrThrow', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Query(_returns => [User], {
@@ -125,12 +138,14 @@ export class UserCrudResolver {
   async users(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindManyUserArgs): Promise<User[]> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'users', 'onBefore', 'findMany', ctx, args)
-    const result = await getPrismaFromContext(ctx).user.findMany({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.user.findMany({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('User', 'users', 'onAfter', 'findMany', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('User', 'users', 'onAfter', 'findMany', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Query(_returns => User, {
@@ -139,12 +154,14 @@ export class UserCrudResolver {
   async user(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindUniqueUserArgs): Promise<User | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'user', 'onBefore', 'findUnique', ctx, args)
-    const result = await getPrismaFromContext(ctx).user.findUnique({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.user.findUnique({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('User', 'user', 'onAfter', 'findUnique', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('User', 'user', 'onAfter', 'findUnique', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Query(_returns => User, {
@@ -153,12 +170,14 @@ export class UserCrudResolver {
   async getUser(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindUniqueUserOrThrowArgs): Promise<User | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'getUser', 'onBefore', 'findUniqueOrThrow', ctx, args)
-    const result = await getPrismaFromContext(ctx).user.findUniqueOrThrow({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.user.findUniqueOrThrow({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('User', 'getUser', 'onAfter', 'findUniqueOrThrow', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('User', 'getUser', 'onAfter', 'findUniqueOrThrow', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Query(_returns => [UserGroupBy], {
@@ -167,14 +186,15 @@ export class UserCrudResolver {
   async groupByUser(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: GroupByUserArgs): Promise<UserGroupBy[]> {
     const { _count, _avg, _sum, _min, _max } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'groupByUser', 'onBefore', 'groupBy', ctx, args)
-    const result = getPrismaFromContext(ctx).user.groupBy({
+    const prisma = getPrismaFromContext(ctx)
+    const result = prisma.user.groupBy({
       ...args,
       ...Object.fromEntries(
         Object.entries({ _count, _avg, _sum, _min, _max }).filter(([_, v]) => v != null)
       )
     })
-    await onIntercept('User', 'groupByUser', 'onAfter', 'groupBy', ctx, args)
-    return result
+    const afterInterceptResult = await onIntercept('User', 'groupByUser', 'onAfter', 'groupBy', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Mutation(_returns => AffectedRowsOutput, {
@@ -183,12 +203,14 @@ export class UserCrudResolver {
   async updateManyUser(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpdateManyUserArgs): Promise<AffectedRowsOutput> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'updateManyUser', 'onBefore', 'updateMany', ctx, args)
-    const result = await getPrismaFromContext(ctx).user.updateMany({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.user.updateMany({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('User', 'updateManyUser', 'onAfter', 'updateMany', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('User', 'updateManyUser', 'onAfter', 'updateMany', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Mutation(_returns => User, {
@@ -197,12 +219,14 @@ export class UserCrudResolver {
   async updateOneUser(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpdateOneUserArgs): Promise<User | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'updateOneUser', 'onBefore', 'update', ctx, args)
-    const result = await getPrismaFromContext(ctx).user.update({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.user.update({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('User', 'updateOneUser', 'onAfter', 'update', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('User', 'updateOneUser', 'onAfter', 'update', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Mutation(_returns => User, {
@@ -211,11 +235,13 @@ export class UserCrudResolver {
   async upsertOneUser(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpsertOneUserArgs): Promise<User> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'upsertOneUser', 'onBefore', 'upsert', ctx, args)
-    const result = await getPrismaFromContext(ctx).user.upsert({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.user.upsert({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('User', 'upsertOneUser', 'onAfter', 'upsert', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('User', 'upsertOneUser', 'onAfter', 'upsert', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

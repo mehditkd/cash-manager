@@ -12,11 +12,13 @@ export class UpdateOneUserResolver {
   async updateOneUser(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpdateOneUserArgs): Promise<User | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'updateOneUser', 'onBefore', 'update', ctx, args)
-    const result = await getPrismaFromContext(ctx).user.update({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.user.update({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('User', 'updateOneUser', 'onAfter', 'update', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('User', 'updateOneUser', 'onAfter', 'update', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

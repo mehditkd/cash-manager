@@ -13,13 +13,14 @@ export class GroupByCartResolver {
   async groupByCart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: GroupByCartArgs): Promise<CartGroupBy[]> {
     const { _count, _avg, _sum, _min, _max } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'groupByCart', 'onBefore', 'groupBy', ctx, args)
-    const result = getPrismaFromContext(ctx).cart.groupBy({
+    const prisma = getPrismaFromContext(ctx)
+    const result = prisma.cart.groupBy({
       ...args,
       ...Object.fromEntries(
         Object.entries({ _count, _avg, _sum, _min, _max }).filter(([_, v]) => v != null)
       )
     })
-    await onIntercept('Cart', 'groupByCart', 'onAfter', 'groupBy', ctx, args)
-    return result
+    const afterInterceptResult = await onIntercept('Cart', 'groupByCart', 'onAfter', 'groupBy', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

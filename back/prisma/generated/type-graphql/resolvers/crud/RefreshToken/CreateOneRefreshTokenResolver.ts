@@ -12,11 +12,13 @@ export class CreateOneRefreshTokenResolver {
   async createOneRefreshToken(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreateOneRefreshTokenArgs): Promise<RefreshToken> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('RefreshToken', 'createOneRefreshToken', 'onBefore', 'create', ctx, args)
-    const result = await getPrismaFromContext(ctx).refreshToken.create({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.refreshToken.create({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('RefreshToken', 'createOneRefreshToken', 'onAfter', 'create', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('RefreshToken', 'createOneRefreshToken', 'onAfter', 'create', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

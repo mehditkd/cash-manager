@@ -2,75 +2,95 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-//
-// await prisma.user.create({
-//   data: {
-//     id: '1',
-//     email: 'test@gmail.com',
-//     createdBy: 'Test',
-//     userName: 'Test'
-//   }
-// })
-//
-// await prisma.product.create({
-//     data: {
-//       id: 33,
-//       price: 132.7,
-//       description: `Ipsa explicabo sed qui sint voluptate magni. Temporibus id assumenda. Qui quaerat libero voluptas sint quis quia sit cumque. Porro consectetur iusto occaecati dolor quam ducimus quidem laborum. Et sequi reiciendis voluptates. Aut quisquam corporis quaerat quia iure qui vel sequi.`,
-//       title: `Global Solutions Designer`,
-//       createdBy: `Corine82`,
-//       modifiedBy: `gadbin.arnaud8@gmail.com`,
-//       createdAt: `Mon Aug 07 2023 13:47:22 GMT+0200 (Central European Summer Time)`,
-//       modifiedAt: null
-//     }
-//   })
-// await prisma.cart.create({
-//     data: {
-//       id: 18,
-//       refusalCount: 199.96,
-//       cartStatus: `refused`,
-//       totalPrice: 244.65,
-//       createdBy: `gadbin.arnaud8@gmail.com`,
-//       modifiedBy: `Joanny_McCullough91`,
-//       createdAt: `Mon Sep 25 2023 04:30:27 GMT+0200 (Central European Summer Time)`,
-//       modifiedAt: `Wed Mar 22 2023 05:48:47 GMT+0100 (Central European Standard Time)`,
-//       user: {connect:{id: '1'}}
-//     }
-//   })
-// await prisma.bill.create({
-//     data: {
-//       id: 53,
-//       totalPrice: 100.89,
-//       choixSimpleText: `cheque`,
-//       createdBy: `gadbin.arnaud8@gmail.com`,
-//       modifiedBy: `Jeffery4`,
-//       createdAt: `Wed May 24 2023 15:58:19 GMT+0200 (Central European Summer Time)`,
-//       modifiedAt: null,
-//       user: {connect:{id: '1'}}
-//     }
-//   })
-// await prisma.cartRows.create({
-//     data: {
-//       id: 151,
-//       quantity: `32.77`,
-//       price: 138.22,
-//       createdBy: `gadbin.arnaud8@gmail.com`,
-//       modifiedBy: `Nickolas17`,
-//       createdAt: `Thu Jun 08 2023 19:30:11 GMT+0200 (Central European Summer Time)`,
-//       modifiedAt: `Fri Jun 16 2023 23:39:11 GMT+0200 (Central European Summer Time)`
-//     }
-//   })
-// await prisma.billRows.create({
-//     data: {
-//       id: 26,
-//       quantity: 12,
-//       price: 21.96,
-//       createdBy: `Luna.Williamson`,
-//       modifiedBy: null,
-//       createdAt: `Sat Sep 30 2023 16:00:47 GMT+0200 (Central European Summer Time)`,
-//       modifiedAt: `Sat Nov 26 2022 22:43:32 GMT+0100 (Central European Standard Time)`
-//     }
-//   })
+  const product = await prisma.product.findUnique({ where: { id: 1 } })
+  console.log(product)
+  if (!product) {
+    await prisma.product.create({
+      data: {
+        id: 1,
+        createdBy: "System",
+        title: 'Lamborghini Aventador',
+        description: `Longueur	4,79 m
+      Largeur sans rétros	2,03 m
+      Hauteur	1,13 m
+      Empattement	2,70 m
+      Volume de coffre mini/maxi	NC / NC
+      Nombre de portes	2
+      Nombre de places assises	2
+      Poids à vide	1 575 kg`,
+        price: 338
+      }
+    })
+    await prisma.product.create({
+      data: {
+        id: 2,
+        createdBy: "System",
+        title: 'Lamborghini Centenario',
+        description: `En préCommande`,
+        price: 50
+      }
+    })
+    await prisma.product.create({
+      data: {
+        id: 3,
+        createdBy: "System",
+        title: 'Lamborghini Huracan',
+        description: `Commercialisé : depuis 2014
+        Prix : de 180 000 € à 358 699 €
+        Motorisation : Essence
+        Emission de CO2 : 290 g/km*`,
+        price: 338
+      }
+    })
+    await prisma.product.create({
+      data: {
+        id: 4,
+        createdBy: "System",
+        title: 'Lamborghini Revuelto',
+        description: `Commercialisé : depuis 2023
+        Prix : 506 808 €
+        Motorisation : Hybride essence électrique`,
+        price: 5
+      }
+    })
+    await prisma.product.create({
+      data: {
+        id: 5,
+        createdBy: "System",
+        title: 'Lamborghini Sian',
+        description: `Commercialisé : depuis 2020
+        Prix non communiqué...
+        Motorisation : Hybride essence électrique`,
+        price: 12
+      }
+    })
+    await prisma.product.create({
+      data: {
+        id: 6,
+        createdBy: "System",
+        title: 'Lamborghini Urus',
+        description: `Commercialisé : depuis 2018
+        Prix : de 212 415 € à 267 428 €
+        Motorisation : Essence
+        Emission de CO2 :
+        Norme NEDC`,
+        price: 22
+      }
+    })
+    await prisma.product.create({
+      data: {
+        id: 7,
+        createdBy: "System",
+        title: 'Lamborghini Gallardo',
+        description: `Commercialisé : de 2003 à 2014
+        Prix : Voir la cote en occasion
+        Motorisation : Essence
+        Emission de CO2:
+        Norme NEDC`,
+        price: 15
+      }
+    })
+  }
 }
 main()
   .catch(e => console.error(e))

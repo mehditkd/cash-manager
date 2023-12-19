@@ -12,11 +12,13 @@ export class FindManyProductResolver {
   async products(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindManyProductArgs): Promise<Product[]> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Product', 'products', 'onBefore', 'findMany', ctx, args)
-    const result = await getPrismaFromContext(ctx).product.findMany({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.product.findMany({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Product', 'products', 'onAfter', 'findMany', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Product', 'products', 'onAfter', 'findMany', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

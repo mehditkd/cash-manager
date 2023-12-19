@@ -12,11 +12,13 @@ export class UpsertOneProviderResolver {
   async upsertOneProvider(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpsertOneProviderArgs): Promise<Provider> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Provider', 'upsertOneProvider', 'onBefore', 'upsert', ctx, args)
-    const result = await getPrismaFromContext(ctx).provider.upsert({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.provider.upsert({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Provider', 'upsertOneProvider', 'onAfter', 'upsert', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Provider', 'upsertOneProvider', 'onAfter', 'upsert', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

@@ -12,11 +12,13 @@ export class FindManyRefreshTokenResolver {
   async refreshTokens(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindManyRefreshTokenArgs): Promise<RefreshToken[]> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('RefreshToken', 'refreshTokens', 'onBefore', 'findMany', ctx, args)
-    const result = await getPrismaFromContext(ctx).refreshToken.findMany({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.refreshToken.findMany({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('RefreshToken', 'refreshTokens', 'onAfter', 'findMany', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('RefreshToken', 'refreshTokens', 'onAfter', 'findMany', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

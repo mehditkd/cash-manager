@@ -13,11 +13,13 @@ export class DeleteManyRefreshTokenResolver {
   async deleteManyRefreshToken(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: DeleteManyRefreshTokenArgs): Promise<AffectedRowsOutput> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('RefreshToken', 'deleteManyRefreshToken', 'onBefore', 'deleteMany', ctx, args)
-    const result = await getPrismaFromContext(ctx).refreshToken.deleteMany({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.refreshToken.deleteMany({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('RefreshToken', 'deleteManyRefreshToken', 'onAfter', 'deleteMany', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('RefreshToken', 'deleteManyRefreshToken', 'onAfter', 'deleteMany', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

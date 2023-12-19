@@ -12,11 +12,13 @@ export class UpsertOneCartRowsResolver {
   async upsertOneCartRows(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpsertOneCartRowsArgs): Promise<CartRows> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('CartRows', 'upsertOneCartRows', 'onBefore', 'upsert', ctx, args)
-    const result = await getPrismaFromContext(ctx).cartRows.upsert({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cartRows.upsert({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('CartRows', 'upsertOneCartRows', 'onAfter', 'upsert', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('CartRows', 'upsertOneCartRows', 'onAfter', 'upsert', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

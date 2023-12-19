@@ -12,11 +12,12 @@ export class AggregateUserResolver {
   })
   async aggregateUser(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: AggregateUserArgs): Promise<AggregateUser> {
     await onIntercept('User', 'aggregateUser', 'onBefore', 'aggregate', ctx, args)
-    const result = getPrismaFromContext(ctx).user.aggregate({
+    const prisma = getPrismaFromContext(ctx)
+    const result = prisma.user.aggregate({
       ...args,
       ...transformInfoIntoPrismaArgs(info)
     })
-    await onIntercept('User', 'aggregateUser', 'onAfter', 'aggregate', ctx, args)
-    return result
+    const afterInterceptResult = await onIntercept('User', 'aggregateUser', 'onAfter', 'aggregate', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

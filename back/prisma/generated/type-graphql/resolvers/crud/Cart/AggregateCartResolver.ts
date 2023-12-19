@@ -12,11 +12,12 @@ export class AggregateCartResolver {
   })
   async aggregateCart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: AggregateCartArgs): Promise<AggregateCart> {
     await onIntercept('Cart', 'aggregateCart', 'onBefore', 'aggregate', ctx, args)
-    const result = getPrismaFromContext(ctx).cart.aggregate({
+    const prisma = getPrismaFromContext(ctx)
+    const result = prisma.cart.aggregate({
       ...args,
       ...transformInfoIntoPrismaArgs(info)
     })
-    await onIntercept('Cart', 'aggregateCart', 'onAfter', 'aggregate', ctx, args)
-    return result
+    const afterInterceptResult = await onIntercept('Cart', 'aggregateCart', 'onAfter', 'aggregate', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

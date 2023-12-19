@@ -12,11 +12,12 @@ export class AggregateProductResolver {
   })
   async aggregateProduct(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: AggregateProductArgs): Promise<AggregateProduct> {
     await onIntercept('Product', 'aggregateProduct', 'onBefore', 'aggregate', ctx, args)
-    const result = getPrismaFromContext(ctx).product.aggregate({
+    const prisma = getPrismaFromContext(ctx)
+    const result = prisma.product.aggregate({
       ...args,
       ...transformInfoIntoPrismaArgs(info)
     })
-    await onIntercept('Product', 'aggregateProduct', 'onAfter', 'aggregate', ctx, args)
-    return result
+    const afterInterceptResult = await onIntercept('Product', 'aggregateProduct', 'onAfter', 'aggregate', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

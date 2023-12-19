@@ -12,11 +12,13 @@ export class FindFirstProviderResolver {
   async findFirstProvider(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindFirstProviderArgs): Promise<Provider | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Provider', 'findFirstProvider', 'onBefore', 'findFirst', ctx, args)
-    const result = await getPrismaFromContext(ctx).provider.findFirst({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.provider.findFirst({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Provider', 'findFirstProvider', 'onAfter', 'findFirst', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Provider', 'findFirstProvider', 'onAfter', 'findFirst', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

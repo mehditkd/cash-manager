@@ -12,11 +12,13 @@ export class DeleteOneProviderResolver {
   async deleteOneProvider(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: DeleteOneProviderArgs): Promise<Provider | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Provider', 'deleteOneProvider', 'onBefore', 'delete', ctx, args)
-    const result = await getPrismaFromContext(ctx).provider.delete({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.provider.delete({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Provider', 'deleteOneProvider', 'onAfter', 'delete', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Provider', 'deleteOneProvider', 'onAfter', 'delete', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

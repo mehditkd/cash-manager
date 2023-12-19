@@ -185,8 +185,8 @@ devDependencies:
     specifier: 0.0.1-security
     version: 0.0.1-security
   kapix-typegraphql-prisma:
-    specifier: 0.26.25
-    version: 0.26.25(@prisma/client@5.4.2)(@types/graphql-fields@1.3.9)(@types/node@18.11.18)(graphql-fields@2.0.3)(graphql-scalars@1.22.2)(prisma@5.4.2)(tslib@2.6.0)(type-graphql@2.0.0-beta.1)
+    specifier: 0.26.28
+    version: 0.26.28(@prisma/client@5.4.2)(@types/graphql-fields@1.3.9)(@types/node@18.11.18)(graphql-fields@2.0.3)(graphql-scalars@1.22.2)(prisma@5.4.2)(tslib@2.6.0)(type-graphql@2.0.0-beta.1)
   node-zip:
     specifier: 1.1.1
     version: 1.1.1
@@ -4992,8 +4992,8 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /kapix-typegraphql-prisma@0.26.25(@prisma/client@5.4.2)(@types/graphql-fields@1.3.9)(@types/node@18.11.18)(graphql-fields@2.0.3)(graphql-scalars@1.22.2)(prisma@5.4.2)(tslib@2.6.0)(type-graphql@2.0.0-beta.1):
-    resolution: {integrity: sha512-5pIFLPIgal9B7spvUsZKANq7gox6q1IK1QB2dJR0zJkX8w/TjbIr5txGEv+Y9RXH6OKlqCYCcEhNy5QX5r+Bsg==}
+  /kapix-typegraphql-prisma@0.26.28(@prisma/client@5.4.2)(@types/graphql-fields@1.3.9)(@types/node@18.11.18)(graphql-fields@2.0.3)(graphql-scalars@1.22.2)(prisma@5.4.2)(tslib@2.6.0)(type-graphql@2.0.0-beta.1):
+    resolution: {integrity: sha512-TYmNioBv8CIVxNPigCCnDCS1OQ2JkZuR+LLJodBBCmCiCSFthu3mB7aP/OG/7azgl/pI8Nph4KLIdHH3ZQ0Tag==}
     engines: {node: '>=12.4'}
     hasBin: true
     peerDependencies:
@@ -5013,6 +5013,7 @@ packages:
       '@types/node': 18.11.18
       graphql-fields: 2.0.3
       graphql-scalars: 1.22.2(graphql@16.6.0)
+      lodash: 4.17.21
       pluralize: 8.0.0
       prisma: 5.4.2
       semver: 7.5.4

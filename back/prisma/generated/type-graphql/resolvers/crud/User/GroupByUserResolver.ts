@@ -13,13 +13,14 @@ export class GroupByUserResolver {
   async groupByUser(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: GroupByUserArgs): Promise<UserGroupBy[]> {
     const { _count, _avg, _sum, _min, _max } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'groupByUser', 'onBefore', 'groupBy', ctx, args)
-    const result = getPrismaFromContext(ctx).user.groupBy({
+    const prisma = getPrismaFromContext(ctx)
+    const result = prisma.user.groupBy({
       ...args,
       ...Object.fromEntries(
         Object.entries({ _count, _avg, _sum, _min, _max }).filter(([_, v]) => v != null)
       )
     })
-    await onIntercept('User', 'groupByUser', 'onAfter', 'groupBy', ctx, args)
-    return result
+    const afterInterceptResult = await onIntercept('User', 'groupByUser', 'onAfter', 'groupBy', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

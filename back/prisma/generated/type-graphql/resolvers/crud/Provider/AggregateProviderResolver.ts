@@ -12,11 +12,12 @@ export class AggregateProviderResolver {
   })
   async aggregateProvider(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: AggregateProviderArgs): Promise<AggregateProvider> {
     await onIntercept('Provider', 'aggregateProvider', 'onBefore', 'aggregate', ctx, args)
-    const result = getPrismaFromContext(ctx).provider.aggregate({
+    const prisma = getPrismaFromContext(ctx)
+    const result = prisma.provider.aggregate({
       ...args,
       ...transformInfoIntoPrismaArgs(info)
     })
-    await onIntercept('Provider', 'aggregateProvider', 'onAfter', 'aggregate', ctx, args)
-    return result
+    const afterInterceptResult = await onIntercept('Provider', 'aggregateProvider', 'onAfter', 'aggregate', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

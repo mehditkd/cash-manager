@@ -12,11 +12,13 @@ export class FindUniqueCartOrThrowResolver {
   async getCart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindUniqueCartOrThrowArgs): Promise<Cart | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'getCart', 'onBefore', 'findUniqueOrThrow', ctx, args)
-    const result = await getPrismaFromContext(ctx).cart.findUniqueOrThrow({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cart.findUniqueOrThrow({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Cart', 'getCart', 'onAfter', 'findUniqueOrThrow', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Cart', 'getCart', 'onAfter', 'findUniqueOrThrow', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

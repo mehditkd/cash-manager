@@ -12,11 +12,13 @@ export class CreateOneUserResolver {
   async createOneUser(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreateOneUserArgs): Promise<User> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'createOneUser', 'onBefore', 'create', ctx, args)
-    const result = await getPrismaFromContext(ctx).user.create({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.user.create({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('User', 'createOneUser', 'onAfter', 'create', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('User', 'createOneUser', 'onAfter', 'create', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

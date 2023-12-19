@@ -12,11 +12,13 @@ export class FindUniqueRefreshTokenOrThrowResolver {
   async getRefreshToken(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindUniqueRefreshTokenOrThrowArgs): Promise<RefreshToken | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('RefreshToken', 'getRefreshToken', 'onBefore', 'findUniqueOrThrow', ctx, args)
-    const result = await getPrismaFromContext(ctx).refreshToken.findUniqueOrThrow({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.refreshToken.findUniqueOrThrow({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('RefreshToken', 'getRefreshToken', 'onAfter', 'findUniqueOrThrow', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('RefreshToken', 'getRefreshToken', 'onAfter', 'findUniqueOrThrow', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

@@ -12,11 +12,13 @@ export class CreateOneProductResolver {
   async createOneProduct(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreateOneProductArgs): Promise<Product> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Product', 'createOneProduct', 'onBefore', 'create', ctx, args)
-    const result = await getPrismaFromContext(ctx).product.create({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.product.create({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Product', 'createOneProduct', 'onAfter', 'create', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Product', 'createOneProduct', 'onAfter', 'create', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

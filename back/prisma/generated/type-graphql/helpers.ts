@@ -64,7 +64,7 @@ export type QueryInterceptorOperation = (typeof allQueryNames)[number]
 
 export type MutationInterceptor = {
   onBefore?: (ctx: any, args: any, crudResolver: string, isQuery: boolean, operation: MutationInterceptorOperation | QueryInterceptorOperation) => void | Promise<void>
-  onAfter?: (ctx: any, args: any, crudResolver: string, isQuery: boolean, operation: MutationInterceptorOperation | QueryInterceptorOperation) => void | Promise<void>
+  onAfter?: (ctx: any, args: any, crudResolver: string, isQuery: boolean, operation: MutationInterceptorOperation | QueryInterceptorOperation, result: any) => void | Promise<void>
 }
 
 export const _resolversInterceptors = {}
@@ -75,8 +75,9 @@ export async function onIntercept(
   method: 'onBefore' | 'onAfter',
   operation: MutationInterceptorOperation | QueryInterceptorOperation,
   ctx: any,
-  args: any
-) {
+  args: any,
+  result: any = null
+): Promise<any> {
   const interceptor = _resolversInterceptors[modelName]
   if (interceptor) {
     const isQuery = allQueryNames.includes(operation as any)
@@ -95,7 +96,7 @@ export async function onIntercept(
       if (isArray(args)) {
         await Promise.all(args.map(i => interceptorFunction(ctx, i, crudResolver, isQuery, operation)))
       } else {
-        await interceptorFunction(ctx, args, crudResolver, isQuery, operation)
+        return await interceptorFunction(ctx, args, crudResolver, isQuery, operation, result)
       }
     }
   }

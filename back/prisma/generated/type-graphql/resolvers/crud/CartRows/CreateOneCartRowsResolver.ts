@@ -12,11 +12,13 @@ export class CreateOneCartRowsResolver {
   async createOneCartRows(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreateOneCartRowsArgs): Promise<CartRows> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('CartRows', 'createOneCartRows', 'onBefore', 'create', ctx, args)
-    const result = await getPrismaFromContext(ctx).cartRows.create({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cartRows.create({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('CartRows', 'createOneCartRows', 'onAfter', 'create', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('CartRows', 'createOneCartRows', 'onAfter', 'create', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

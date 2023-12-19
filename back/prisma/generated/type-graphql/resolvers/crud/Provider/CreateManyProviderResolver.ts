@@ -13,11 +13,13 @@ export class CreateManyProviderResolver {
   async createManyProvider(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreateManyProviderArgs): Promise<AffectedRowsOutput> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Provider', 'createManyProvider', 'onBefore', 'createMany', ctx, args)
-    const result = await getPrismaFromContext(ctx).provider.createMany({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.provider.createMany({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Provider', 'createManyProvider', 'onAfter', 'createMany', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Provider', 'createManyProvider', 'onAfter', 'createMany', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

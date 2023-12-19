@@ -13,10 +13,10 @@ services:
         # condition: service_healthy
     env_file:
       - .env.development
-    volumes:
-      - type: bind
-        source: ./certbot
-        target: /home/certbot
+    # volumes:
+    #   - type: bind
+    #     source: ./certbot
+    #     target: /home/certbot
     # tty: true # interact with the shell
     # stdin_open: true
   kapix-prisma-postgresdb:

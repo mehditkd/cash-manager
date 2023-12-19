@@ -12,11 +12,13 @@ export class FindFirstProductOrThrowResolver {
   async findFirstProductOrThrow(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindFirstProductOrThrowArgs): Promise<Product | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Product', 'findFirstProductOrThrow', 'onBefore', 'findFirstOrThrow', ctx, args)
-    const result = await getPrismaFromContext(ctx).product.findFirstOrThrow({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.product.findFirstOrThrow({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Product', 'findFirstProductOrThrow', 'onAfter', 'findFirstOrThrow', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Product', 'findFirstProductOrThrow', 'onAfter', 'findFirstOrThrow', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

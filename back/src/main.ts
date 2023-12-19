@@ -102,6 +102,9 @@ async function bootstrap () {
     module.hot.dispose(() => app.close())
   }
 
-  await app.listen(PORT, () => console.log(`Running on port ${PORT}`))
+  await app.listen(PORT, async () => {
+    console.log(`Running on domain ${await app.getUrl()}`)
+    console.log(`Running on port ${PORT}`)
+  })
 }
 bootstrap()

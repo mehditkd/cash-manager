@@ -12,12 +12,13 @@
     "docker:prod": "docker compose -f docker-compose.prod.yml up --build",
     "docker:prod:down": "docker compose -f docker-compose.prod.yml down",
     "docker:staging": "docker compose -f docker-compose.staging.yml up --build",
+    "docker:dev": "docker compose -f docker-compose.yml up --build",
     "docker:staging:down": "docker compose -f docker-compose.staging.yml down",
 
     "dev": "cross-env NODE_ENV=DEVELOPMENT nest start --watch",
     "dev:no-watch": "cross-env NODE_ENV=DEVELOPMENT nest start",
 
-    "start:dev": "pnpm sync:dev && cross-env NODE_ENV=DEVELOPMENT nest start --watch",
+    "start:dev": "pnpm sync:dev && pnpm seed:dev && cross-env NODE_ENV=DEVELOPMENT nest start --watch",
     "start:staging": "pnpm sync:staging && cross-env NODE_ENV=STAGING node dist/src/main",
     "start:prod": "pnpm sync:prod && cross-env NODE_ENV=PRODUCTION node dist/src/main",
     "start:debug": "nest start --debug --watch",
@@ -117,7 +118,7 @@
     "class-validator": "0.14.0",
     "cross-env": "^7.0.3",
     "fs": "0.0.1-security",
-    "kapix-typegraphql-prisma": "0.26.25",
+    "kapix-typegraphql-prisma": "0.26.28",
     "node-zip": "1.1.1",
     "path": "0.12.7",
     "prisma": "5.4.2",

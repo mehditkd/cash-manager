@@ -12,11 +12,12 @@ export class AggregateRefreshTokenResolver {
   })
   async aggregateRefreshToken(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: AggregateRefreshTokenArgs): Promise<AggregateRefreshToken> {
     await onIntercept('RefreshToken', 'aggregateRefreshToken', 'onBefore', 'aggregate', ctx, args)
-    const result = getPrismaFromContext(ctx).refreshToken.aggregate({
+    const prisma = getPrismaFromContext(ctx)
+    const result = prisma.refreshToken.aggregate({
       ...args,
       ...transformInfoIntoPrismaArgs(info)
     })
-    await onIntercept('RefreshToken', 'aggregateRefreshToken', 'onAfter', 'aggregate', ctx, args)
-    return result
+    const afterInterceptResult = await onIntercept('RefreshToken', 'aggregateRefreshToken', 'onAfter', 'aggregate', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

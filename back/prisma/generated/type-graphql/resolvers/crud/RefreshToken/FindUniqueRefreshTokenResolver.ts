@@ -12,11 +12,13 @@ export class FindUniqueRefreshTokenResolver {
   async refreshToken(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindUniqueRefreshTokenArgs): Promise<RefreshToken | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('RefreshToken', 'refreshToken', 'onBefore', 'findUnique', ctx, args)
-    const result = await getPrismaFromContext(ctx).refreshToken.findUnique({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.refreshToken.findUnique({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('RefreshToken', 'refreshToken', 'onAfter', 'findUnique', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('RefreshToken', 'refreshToken', 'onAfter', 'findUnique', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

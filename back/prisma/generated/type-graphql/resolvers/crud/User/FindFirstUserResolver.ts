@@ -12,11 +12,13 @@ export class FindFirstUserResolver {
   async findFirstUser(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindFirstUserArgs): Promise<User | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'findFirstUser', 'onBefore', 'findFirst', ctx, args)
-    const result = await getPrismaFromContext(ctx).user.findFirst({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.user.findFirst({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('User', 'findFirstUser', 'onAfter', 'findFirst', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('User', 'findFirstUser', 'onAfter', 'findFirst', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

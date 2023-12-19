@@ -12,11 +12,13 @@ export class FindUniqueUserResolver {
   async user(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindUniqueUserArgs): Promise<User | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('User', 'user', 'onBefore', 'findUnique', ctx, args)
-    const result = await getPrismaFromContext(ctx).user.findUnique({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.user.findUnique({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('User', 'user', 'onAfter', 'findUnique', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('User', 'user', 'onAfter', 'findUnique', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

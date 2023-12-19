@@ -13,11 +13,13 @@ export class CreateManyCartResolver {
   async createManyCart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreateManyCartArgs): Promise<AffectedRowsOutput> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'createManyCart', 'onBefore', 'createMany', ctx, args)
-    const result = await getPrismaFromContext(ctx).cart.createMany({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cart.createMany({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Cart', 'createManyCart', 'onAfter', 'createMany', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Cart', 'createManyCart', 'onAfter', 'createMany', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

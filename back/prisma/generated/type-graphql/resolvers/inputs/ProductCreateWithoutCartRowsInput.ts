@@ -26,9 +26,9 @@ export class ProductCreateWithoutCartRowsInput {
   price?: number | undefined;
 
   @TypeGraphQL.Field(_type => String, {
-    nullable: false
+    nullable: true
   })
-  createdBy!: string;
+  createdBy?: string | undefined;
 
   @TypeGraphQL.Field(_type => String, {
     nullable: true

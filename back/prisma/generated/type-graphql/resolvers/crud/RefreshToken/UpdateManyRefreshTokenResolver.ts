@@ -13,11 +13,13 @@ export class UpdateManyRefreshTokenResolver {
   async updateManyRefreshToken(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpdateManyRefreshTokenArgs): Promise<AffectedRowsOutput> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('RefreshToken', 'updateManyRefreshToken', 'onBefore', 'updateMany', ctx, args)
-    const result = await getPrismaFromContext(ctx).refreshToken.updateMany({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.refreshToken.updateMany({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('RefreshToken', 'updateManyRefreshToken', 'onAfter', 'updateMany', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('RefreshToken', 'updateManyRefreshToken', 'onAfter', 'updateMany', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

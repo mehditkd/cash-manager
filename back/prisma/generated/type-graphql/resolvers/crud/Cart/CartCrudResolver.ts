@@ -27,12 +27,13 @@ export class CartCrudResolver {
   })
   async aggregateCart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: AggregateCartArgs): Promise<AggregateCart> {
     await onIntercept('Cart', 'aggregateCart', 'onBefore', 'aggregate', ctx, args)
-    const result = getPrismaFromContext(ctx).cart.aggregate({
+    const prisma = getPrismaFromContext(ctx)
+    const result = prisma.cart.aggregate({
       ...args,
       ...transformInfoIntoPrismaArgs(info)
     })
-    await onIntercept('Cart', 'aggregateCart', 'onAfter', 'aggregate', ctx, args)
-    return result
+    const afterInterceptResult = await onIntercept('Cart', 'aggregateCart', 'onAfter', 'aggregate', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Mutation(_returns => AffectedRowsOutput, {
@@ -41,12 +42,14 @@ export class CartCrudResolver {
   async createManyCart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreateManyCartArgs): Promise<AffectedRowsOutput> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'createManyCart', 'onBefore', 'createMany', ctx, args)
-    const result = await getPrismaFromContext(ctx).cart.createMany({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cart.createMany({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Cart', 'createManyCart', 'onAfter', 'createMany', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Cart', 'createManyCart', 'onAfter', 'createMany', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Mutation(_returns => Cart, {
@@ -55,12 +58,14 @@ export class CartCrudResolver {
   async createOneCart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: CreateOneCartArgs): Promise<Cart> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'createOneCart', 'onBefore', 'create', ctx, args)
-    const result = await getPrismaFromContext(ctx).cart.create({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cart.create({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Cart', 'createOneCart', 'onAfter', 'create', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Cart', 'createOneCart', 'onAfter', 'create', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Mutation(_returns => AffectedRowsOutput, {
@@ -69,12 +74,14 @@ export class CartCrudResolver {
   async deleteManyCart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: DeleteManyCartArgs): Promise<AffectedRowsOutput> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'deleteManyCart', 'onBefore', 'deleteMany', ctx, args)
-    const result = await getPrismaFromContext(ctx).cart.deleteMany({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cart.deleteMany({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Cart', 'deleteManyCart', 'onAfter', 'deleteMany', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Cart', 'deleteManyCart', 'onAfter', 'deleteMany', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Mutation(_returns => Cart, {
@@ -83,12 +90,14 @@ export class CartCrudResolver {
   async deleteOneCart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: DeleteOneCartArgs): Promise<Cart | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'deleteOneCart', 'onBefore', 'delete', ctx, args)
-    const result = await getPrismaFromContext(ctx).cart.delete({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cart.delete({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Cart', 'deleteOneCart', 'onAfter', 'delete', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Cart', 'deleteOneCart', 'onAfter', 'delete', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Query(_returns => Cart, {
@@ -97,12 +106,14 @@ export class CartCrudResolver {
   async findFirstCart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindFirstCartArgs): Promise<Cart | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'findFirstCart', 'onBefore', 'findFirst', ctx, args)
-    const result = await getPrismaFromContext(ctx).cart.findFirst({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cart.findFirst({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Cart', 'findFirstCart', 'onAfter', 'findFirst', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Cart', 'findFirstCart', 'onAfter', 'findFirst', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Query(_returns => Cart, {
@@ -111,12 +122,14 @@ export class CartCrudResolver {
   async findFirstCartOrThrow(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindFirstCartOrThrowArgs): Promise<Cart | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'findFirstCartOrThrow', 'onBefore', 'findFirstOrThrow', ctx, args)
-    const result = await getPrismaFromContext(ctx).cart.findFirstOrThrow({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cart.findFirstOrThrow({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Cart', 'findFirstCartOrThrow', 'onAfter', 'findFirstOrThrow', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Cart', 'findFirstCartOrThrow', 'onAfter', 'findFirstOrThrow', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Query(_returns => [Cart], {
@@ -125,12 +138,14 @@ export class CartCrudResolver {
   async carts(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindManyCartArgs): Promise<Cart[]> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'carts', 'onBefore', 'findMany', ctx, args)
-    const result = await getPrismaFromContext(ctx).cart.findMany({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cart.findMany({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Cart', 'carts', 'onAfter', 'findMany', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Cart', 'carts', 'onAfter', 'findMany', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Query(_returns => Cart, {
@@ -139,12 +154,14 @@ export class CartCrudResolver {
   async cart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindUniqueCartArgs): Promise<Cart | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'cart', 'onBefore', 'findUnique', ctx, args)
-    const result = await getPrismaFromContext(ctx).cart.findUnique({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cart.findUnique({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Cart', 'cart', 'onAfter', 'findUnique', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Cart', 'cart', 'onAfter', 'findUnique', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Query(_returns => Cart, {
@@ -153,12 +170,14 @@ export class CartCrudResolver {
   async getCart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: FindUniqueCartOrThrowArgs): Promise<Cart | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'getCart', 'onBefore', 'findUniqueOrThrow', ctx, args)
-    const result = await getPrismaFromContext(ctx).cart.findUniqueOrThrow({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cart.findUniqueOrThrow({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Cart', 'getCart', 'onAfter', 'findUniqueOrThrow', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Cart', 'getCart', 'onAfter', 'findUniqueOrThrow', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Query(_returns => [CartGroupBy], {
@@ -167,14 +186,15 @@ export class CartCrudResolver {
   async groupByCart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: GroupByCartArgs): Promise<CartGroupBy[]> {
     const { _count, _avg, _sum, _min, _max } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'groupByCart', 'onBefore', 'groupBy', ctx, args)
-    const result = getPrismaFromContext(ctx).cart.groupBy({
+    const prisma = getPrismaFromContext(ctx)
+    const result = prisma.cart.groupBy({
       ...args,
       ...Object.fromEntries(
         Object.entries({ _count, _avg, _sum, _min, _max }).filter(([_, v]) => v != null)
       )
     })
-    await onIntercept('Cart', 'groupByCart', 'onAfter', 'groupBy', ctx, args)
-    return result
+    const afterInterceptResult = await onIntercept('Cart', 'groupByCart', 'onAfter', 'groupBy', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Mutation(_returns => AffectedRowsOutput, {
@@ -183,12 +203,14 @@ export class CartCrudResolver {
   async updateManyCart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpdateManyCartArgs): Promise<AffectedRowsOutput> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'updateManyCart', 'onBefore', 'updateMany', ctx, args)
-    const result = await getPrismaFromContext(ctx).cart.updateMany({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cart.updateMany({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Cart', 'updateManyCart', 'onAfter', 'updateMany', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Cart', 'updateManyCart', 'onAfter', 'updateMany', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Mutation(_returns => Cart, {
@@ -197,12 +219,14 @@ export class CartCrudResolver {
   async updateOneCart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpdateOneCartArgs): Promise<Cart | null> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'updateOneCart', 'onBefore', 'update', ctx, args)
-    const result = await getPrismaFromContext(ctx).cart.update({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cart.update({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Cart', 'updateOneCart', 'onAfter', 'update', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Cart', 'updateOneCart', 'onAfter', 'update', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 
   @TypeGraphQL.Mutation(_returns => Cart, {
@@ -211,11 +235,13 @@ export class CartCrudResolver {
   async upsertOneCart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: UpsertOneCartArgs): Promise<Cart> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'upsertOneCart', 'onBefore', 'upsert', ctx, args)
-    const result = await getPrismaFromContext(ctx).cart.upsert({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cart.upsert({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Cart', 'upsertOneCart', 'onAfter', 'upsert', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Cart', 'upsertOneCart', 'onAfter', 'upsert', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

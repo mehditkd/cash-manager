@@ -13,13 +13,14 @@ export class GroupByProviderResolver {
   async groupByProvider(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: GroupByProviderArgs): Promise<ProviderGroupBy[]> {
     const { _count, _avg, _sum, _min, _max } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Provider', 'groupByProvider', 'onBefore', 'groupBy', ctx, args)
-    const result = getPrismaFromContext(ctx).provider.groupBy({
+    const prisma = getPrismaFromContext(ctx)
+    const result = prisma.provider.groupBy({
       ...args,
       ...Object.fromEntries(
         Object.entries({ _count, _avg, _sum, _min, _max }).filter(([_, v]) => v != null)
       )
     })
-    await onIntercept('Provider', 'groupByProvider', 'onAfter', 'groupBy', ctx, args)
-    return result
+    const afterInterceptResult = await onIntercept('Provider', 'groupByProvider', 'onAfter', 'groupBy', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }

@@ -10,7 +10,6 @@ import { AuthService } from './auth/auth.service'
 import { AuthResolver } from './auth/auth.resolver'
 import { AuthModule } from './auth/auth.module'
 import { AuthServiceTokens } from './auth/auth.service.tokens'
-import { applyInterceptors } from './middleware/resolversInterceptor'
 import { applyModelsEnhance } from './middleware/modelsEnhance'
 import { applyResolversEnhance } from './middleware/resolversEnhance'
 import { fillContext, prisma } from './auth/middleware'
@@ -29,7 +28,7 @@ else if (process.env.NODE_ENV === 'TEST') {
 console.log(`Running in ${envFilePath}`)
 
 // Fills createdBy + ModifiedBy automatically & custom interceptors
-applyInterceptors()
+// applyInterceptors()
 
 // Ex : Make password not searchable in qraphql
 applyModelsEnhance()

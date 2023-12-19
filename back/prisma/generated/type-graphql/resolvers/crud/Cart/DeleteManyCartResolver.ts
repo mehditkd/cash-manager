@@ -13,11 +13,13 @@ export class DeleteManyCartResolver {
   async deleteManyCart(@TypeGraphQL.Ctx() ctx: any, @TypeGraphQL.Info() info: GraphQLResolveInfo, @TypeGraphQL.Args() args: DeleteManyCartArgs): Promise<AffectedRowsOutput> {
     const { _count } = transformInfoIntoPrismaArgs(info)
     await onIntercept('Cart', 'deleteManyCart', 'onBefore', 'deleteMany', ctx, args)
-    const result = await getPrismaFromContext(ctx).cart.deleteMany({
+    const prisma = getPrismaFromContext(ctx)
+    const result = await prisma.cart.deleteMany({
       ...args,
       ...(_count && transformCountFieldIntoSelectRelationsCount(_count))
     })
-    await onIntercept('Cart', 'deleteManyCart', 'onAfter', 'deleteMany', ctx, args)
-    return result
+
+    const afterInterceptResult = await onIntercept('Cart', 'deleteManyCart', 'onAfter', 'deleteMany', ctx, args, result)
+    return afterInterceptResult ?? result
   }
 }
