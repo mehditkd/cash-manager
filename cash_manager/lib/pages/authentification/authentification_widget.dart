@@ -738,6 +738,7 @@ class _AuthentificationWidgetState extends State<AuthentificationWidget>
                                                     ),
                                                   ),
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                   Align(
                                                     alignment:
                                                         const AlignmentDirectional(
@@ -805,6 +806,8 @@ class _AuthentificationWidgetState extends State<AuthentificationWidget>
                                                               context.goNamed(
                                                                   'Home');
 =======
+=======
+>>>>>>> 492f1d6 (finished)
                                                   Mutation(
                                                       options: MutationOptions(
                                                         document: gql(
@@ -819,6 +822,9 @@ class _AuthentificationWidgetState extends State<AuthentificationWidget>
                                                             id
                                                             cartRows {
                                                               id
+<<<<<<< HEAD
+>>>>>>> 492f1d6 (finished)
+=======
 >>>>>>> 492f1d6 (finished)
                                                             }
                                                           }
@@ -832,6 +838,7 @@ class _AuthentificationWidgetState extends State<AuthentificationWidget>
                                                                     result) {
                                                           return cache;
                                                         },
+<<<<<<< HEAD
 <<<<<<< HEAD
                                                         text: 'Get Started',
                                                         options:
@@ -872,6 +879,8 @@ class _AuthentificationWidgetState extends State<AuthentificationWidget>
                                                                 .transparent,
                                                             width: 1.0,
 =======
+=======
+>>>>>>> 492f1d6 (finished)
                                                         onError: (OperationException?
                                                                 error) =>
                                                             ScaffoldMessenger
@@ -881,6 +890,9 @@ class _AuthentificationWidgetState extends State<AuthentificationWidget>
                                                             content: Text(
                                                               error.toString(),
                                                             ),
+<<<<<<< HEAD
+>>>>>>> 492f1d6 (finished)
+=======
 >>>>>>> 492f1d6 (finished)
                                                           ),
                                                         ),

@@ -16,7 +16,10 @@ void main() async {
   usePathUrlStrategy();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 492f1d6 (finished)
   await initFirebase();
   await initHiveForFlutter();
 >>>>>>> 492f1d6 (finished)

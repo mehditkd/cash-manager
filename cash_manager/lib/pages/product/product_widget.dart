@@ -1,5 +1,8 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 492f1d6 (finished)
 import 'package:cash_manager/pages/checkout/checkout_widget.dart';
 import 'package:cash_manager/pages/home/home_widget.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -25,8 +28,11 @@ export 'product_model.dart';
 
 class ProductWidget extends StatefulWidget {
 <<<<<<< HEAD
+<<<<<<< HEAD
   const ProductWidget({Key? key}) : super(key: key);
 =======
+=======
+>>>>>>> 492f1d6 (finished)
   const ProductWidget(
       {super.key,
       required this.product,
@@ -36,6 +42,9 @@ class ProductWidget extends StatefulWidget {
   final Products product;
   final String email;
   final String id;
+<<<<<<< HEAD
+>>>>>>> 492f1d6 (finished)
+=======
 >>>>>>> 492f1d6 (finished)
 
   @override
@@ -177,6 +186,7 @@ class _ProductWidgetState extends State<ProductWidget>
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -232,6 +242,8 @@ class _ProductWidgetState extends State<ProductWidget>
                 icon: Icon(
                   Icons.shopping_cart_outlined,
 =======
+=======
+>>>>>>> 492f1d6 (finished)
     return FutureBuilder<Map<String, dynamic>?>(
         future: getCart(),
         builder: (context, snapshot) {
@@ -277,6 +289,63 @@ class _ProductWidgetState extends State<ProductWidget>
                   context.pushNamed('Checkout');
                 },
               ),
+<<<<<<< HEAD
+=======
+              title: Text(
+                ' ',
+                style: FlutterFlowTheme.of(context).titleSmall.override(
+                      fontFamily: 'Lexend Deca',
+                      color: Color(0xFF151B1E),
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+              ),
+              actions: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 24.0, 0.0),
+                  child: badges.Badge(
+                    badgeContent: Text(
+                      length.toString(),
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            fontFamily: 'Inter',
+                            color: Colors.white,
+                          ),
+                    ),
+                    showBadge: true,
+                    shape: badges.BadgeShape.circle,
+                    badgeColor: FlutterFlowTheme.of(context).primary,
+                    elevation: 4.0,
+                    padding: EdgeInsets.all(8.0),
+                    position: badges.BadgePosition.topEnd(),
+                    animationType: badges.BadgeAnimationType.scale,
+                    toAnimate: true,
+                    child: FlutterFlowIconButton(
+                      borderColor: Colors.transparent,
+                      borderRadius: 30.0,
+                      buttonSize: 48.0,
+                      icon: Icon(
+                        Icons.shopping_cart_outlined,
+                        color: FlutterFlowTheme.of(context).secondaryText,
+                        size: 30.0,
+                      ),
+                      onPressed: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CheckoutWidget(
+                              email: widget.email,
+                              userId: widget.id,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+              centerTitle: true,
+              elevation: 0.0,
+>>>>>>> 492f1d6 (finished)
             ),
           ),
         ],

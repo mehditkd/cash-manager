@@ -15,7 +15,11 @@
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 <<<<<<< HEAD
+<<<<<<< HEAD
 		ADFBB4C31B4B3775EC8BE0A4 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99F212A085B9B50AE624928B /* Pods_Runner.framework */; };
+=======
+		9D94045F31D550B8672E004A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D88A8F770162C1961452E648 /* GoogleService-Info.plist */; };
+>>>>>>> 492f1d6 (finished)
 =======
 		9D94045F31D550B8672E004A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D88A8F770162C1961452E648 /* GoogleService-Info.plist */; };
 >>>>>>> 492f1d6 (finished)
@@ -116,6 +120,9 @@
 				33098FC5D2106DCB44CAEA79 /* Pods */,
 				CC79BB5F4B7E86C62E930C2C /* Frameworks */,
 				D88A8F770162C1961452E648 /* GoogleService-Info.plist */,
+<<<<<<< HEAD
+>>>>>>> 492f1d6 (finished)
+=======
 >>>>>>> 492f1d6 (finished)
 			);
 			sourceTree = "<group>";

@@ -136,6 +136,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         ),
         FFRoute(
 <<<<<<< HEAD
+<<<<<<< HEAD
           name: 'Product',
           path: '/product',
           builder: (context, params) => ProductWidget(),
@@ -146,6 +147,8 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => CheckoutWidget(),
         ),
         FFRoute(
+=======
+>>>>>>> 492f1d6 (finished)
 =======
 >>>>>>> 492f1d6 (finished)
           name: 'Profile',
