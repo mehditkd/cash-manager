@@ -15,6 +15,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   usePathUrlStrategy();
 
+<<<<<<< HEAD
+=======
+  await initFirebase();
+  await initHiveForFlutter();
+>>>>>>> 492f1d6 (finished)
   await FlutterFlowTheme.initialize();
 
   runApp(MyApp());
@@ -37,6 +42,17 @@ class _MyAppState extends State<MyApp> {
   late GoRouter _router;
 
   bool displaySplashImage = true;
+<<<<<<< HEAD
+=======
+  ValueNotifier<GraphQLClient> client = ValueNotifier(
+    GraphQLClient(
+      link: HttpLink(
+        'http://172.20.10.2:8080/graphql',
+      ),
+      cache: GraphQLCache(store: HiveStore()),
+    ),
+  );
+>>>>>>> 492f1d6 (finished)
 
   @override
   void initState() {

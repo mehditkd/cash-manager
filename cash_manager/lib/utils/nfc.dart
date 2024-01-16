@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 
-
 class NFCScan extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => NFCScanState();
@@ -11,12 +10,34 @@ class NFCScan extends StatefulWidget {
 
 class NFCScanState extends State<NFCScan> {
   ValueNotifier<dynamic> result = ValueNotifier(null);
+  @override
+  void initState() {
+    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+      result.value = tag.data;
+      NfcManager.instance.stopSession();
+      Navigator.pop(context, tag.data['isodep']['identifier'].toString());
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: Text('NfcManager Plugin Example')),
+        appBar: AppBar(
+          title: const Text(
+            'Scanner sa carte',
+            style: TextStyle(color: Colors.black),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back_ios),
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+        ),
         body: SafeArea(
           child: FutureBuilder<bool>(
             future: NfcManager.instance.isAvailable(),
@@ -39,26 +60,6 @@ class NFCScanState extends State<NFCScan> {
                                   Text('${value ?? ''}'),
                             ),
                           ),
-                        ),
-                      ),
-                      Flexible(
-                        flex: 3,
-                        child: GridView.count(
-                          padding: EdgeInsets.all(4),
-                          crossAxisCount: 2,
-                          childAspectRatio: 4,
-                          crossAxisSpacing: 4,
-                          mainAxisSpacing: 4,
-                          children: [
-                            ElevatedButton(
-                                child: Text('Tag Read'), onPressed: _tagRead),
-                            ElevatedButton(
-                                child: Text('Ndef Write'),
-                                onPressed: _ndefWrite),
-                            ElevatedButton(
-                                child: Text('Ndef Write Lock'),
-                                onPressed: _ndefWriteLock),
-                          ],
                         ),
                       ),
                     ],

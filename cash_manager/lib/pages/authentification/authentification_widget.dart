@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
@@ -734,6 +737,7 @@ class _AuthentificationWidgetState extends State<AuthentificationWidget>
                                                       ),
                                                     ),
                                                   ),
+<<<<<<< HEAD
                                                   Align(
                                                     alignment:
                                                         const AlignmentDirectional(
@@ -800,11 +804,35 @@ class _AuthentificationWidgetState extends State<AuthentificationWidget>
                                                                       'refreshToken']);
                                                               context.goNamed(
                                                                   'Home');
+=======
+                                                  Mutation(
+                                                      options: MutationOptions(
+                                                        document: gql(
+                                                          r'''
+                                                         mutation createOneCart($createdBy: String!, $userId: String!){
+                                                          createOneCart(
+                                                            data: {
+                                                              createdBy: $createdBy
+                                                              user: { connect: { id: $userId } }
                                                             }
-                                                          } catch (e) {
-                                                            print("error: $e");
+                                                          ) {
+                                                            id
+                                                            cartRows {
+                                                              id
+>>>>>>> 492f1d6 (finished)
+                                                            }
                                                           }
+                                                        }
+                                                        ''',
+                                                        ),
+                                                        update:
+                                                            (GraphQLDataProxy
+                                                                    cache,
+                                                                QueryResult?
+                                                                    result) {
+                                                          return cache;
                                                         },
+<<<<<<< HEAD
                                                         text: 'Get Started',
                                                         options:
                                                             FFButtonOptions(
@@ -843,15 +871,226 @@ class _AuthentificationWidgetState extends State<AuthentificationWidget>
                                                             color: Colors
                                                                 .transparent,
                                                             width: 1.0,
+=======
+                                                        onError: (OperationException?
+                                                                error) =>
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                              error.toString(),
+                                                            ),
+>>>>>>> 492f1d6 (finished)
                                                           ),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      40.0),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ),
+                                                      builder: (RunMutation
+                                                              _addCartRow,
+                                                          QueryResult?
+                                                              addResult) {
+                                                        return Align(
+                                                          alignment:
+                                                              const AlignmentDirectional(
+                                                                  0.0, 0.0),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsetsDirectional
+                                                                    .fromSTEB(
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    16.0),
+                                                            child:
+                                                                FFButtonWidget(
+                                                              onPressed:
+                                                                  () async {
+                                                                try {
+                                                                  final registerResponse =
+                                                                      await Dio()
+                                                                          .post(
+                                                                    "http://172.20.10.2:8080/api/auth/email/register",
+                                                                    data: {
+                                                                      "email": _model
+                                                                          .emailAddressController1
+                                                                          .text,
+                                                                      "password": _model
+                                                                          .passwordController1
+                                                                          .text,
+                                                                    },
+                                                                  );
+                                                                  Map<String,
+                                                                          dynamic>
+                                                                      registerResponseData =
+                                                                      registerResponse
+                                                                              .data
+                                                                          as Map<
+                                                                              String,
+                                                                              dynamic>;
+                                                                  if (registerResponseData[
+                                                                          'success'] ==
+                                                                      false) {
+                                                                    ScaffoldMessenger.of(
+                                                                            context)
+                                                                        .showSnackBar(
+                                                                            SnackBar(
+                                                                      content:
+                                                                          Text(
+                                                                        registerResponseData[
+                                                                            'message'],
+                                                                        style:
+                                                                            const TextStyle(
+                                                                          color:
+                                                                              Colors.red,
+                                                                        ),
+                                                                      ),
+                                                                    ));
+                                                                  } else {
+                                                                    final result =
+                                                                        await GraphQLClient(
+                                                                      link:
+                                                                          HttpLink(
+                                                                        'http://172.20.10.2:8080/graphql',
+                                                                      ),
+                                                                      cache: GraphQLCache(
+                                                                          store:
+                                                                              HiveStore()),
+                                                                    ).query(
+                                                                      QueryOptions(
+                                                                        document:
+                                                                            gql(
+                                                                          r'''
+                                                                          query users($email: String!){
+                                                                            users (where: { createdBy: { equals: $email } }){
+                                                                              id
+                                                                              email
+                                                                            }
+                                                                          }
+                                                                          ''',
+                                                                        ),
+                                                                        variables: {
+                                                                          'email': _model
+                                                                              .emailAddressController1
+                                                                              .text,
+                                                                        },
+                                                                      ),
+                                                                    );
+                                                                    final res =
+                                                                        await GraphQLClient(
+                                                                      link:
+                                                                          HttpLink(
+                                                                        'http://172.20.10.2:8080/graphql',
+                                                                      ),
+                                                                      cache: GraphQLCache(
+                                                                          store:
+                                                                              HiveStore()),
+                                                                    ).mutate(
+                                                                      MutationOptions(
+                                                                        document:
+                                                                            gql(
+                                                                          r'''
+                                                                          mutation createOneCart($createdBy: String!, $userId: String!){
+                                                                            createOneCart(
+                                                                              data: {
+                                                                                createdBy: $createdBy
+                                                                                user: { connect: { id: $userId } }
+                                                                              }
+                                                                            ) {
+                                                                              id
+                                                                              cartRows {
+                                                                                id
+                                                                              }
+                                                                            }
+                                                                          }
+                                                                          ''',
+                                                                        ),
+                                                                        variables: {
+                                                                          'createdBy': _model
+                                                                              .emailAddressController1
+                                                                              .text,
+                                                                          'userId':
+                                                                              result.data?['users'][0]['id'],
+                                                                        },
+                                                                      ),
+                                                                    );
+                                                                    await const FlutterSecureStorage().write(
+                                                                        key:
+                                                                            'accessToken',
+                                                                        value: registerResponseData[
+                                                                            'accessToken']);
+                                                                    await const FlutterSecureStorage().write(
+                                                                        key:
+                                                                            'email',
+                                                                        value: _model
+                                                                            .emailAddressController1
+                                                                            .text);
+                                                                    await const FlutterSecureStorage().write(
+                                                                        key:
+                                                                            'createdBy',
+                                                                        value: result.data?['users'][0]
+                                                                            [
+                                                                            'id']);
+                                                                    await const FlutterSecureStorage().write(
+                                                                        key:
+                                                                            'refreshToken',
+                                                                        value: registerResponseData[
+                                                                            'refreshToken']);
+                                                                    context.goNamed(
+                                                                        'Home');
+                                                                  }
+                                                                } catch (e) {
+                                                                  print(
+                                                                      "error: $e");
+                                                                }
+                                                              },
+                                                              text:
+                                                                  'Get Started',
+                                                              options:
+                                                                  FFButtonOptions(
+                                                                width: 230.0,
+                                                                height: 52.0,
+                                                                padding:
+                                                                    const EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0),
+                                                                iconPadding:
+                                                                    const EdgeInsetsDirectional
+                                                                        .fromSTEB(
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0,
+                                                                        0.0),
+                                                                color: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .primary,
+                                                                textStyle: FlutterFlowTheme.of(
+                                                                        context)
+                                                                    .titleSmall
+                                                                    .override(
+                                                                      fontFamily:
+                                                                          'Inter',
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ),
+                                                                elevation: 3.0,
+                                                                borderSide:
+                                                                    const BorderSide(
+                                                                  color: Colors
+                                                                      .transparent,
+                                                                  width: 1.0,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            40.0),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }),
                                                 ],
                                               ),
                                             ).animateOnPageLoad(animationsMap[
@@ -1146,8 +1385,102 @@ class _AuthentificationWidgetState extends State<AuthentificationWidget>
                                                                   16.0),
                                                       child: FFButtonWidget(
                                                         onPressed: () async {
-                                                          context
-                                                              .goNamed('Home');
+                                                          try {
+                                                            final registerResponse =
+                                                                await Dio()
+                                                                    .post(
+                                                              "http://172.20.10.2:8080/api/auth/email/login",
+                                                              data: {
+                                                                "email": _model
+                                                                    .emailAddressController2
+                                                                    .text,
+                                                                "password": _model
+                                                                    .passwordController2
+                                                                    .text,
+                                                              },
+                                                            );
+                                                            Map<String, dynamic>
+                                                                registerResponseData =
+                                                                registerResponse
+                                                                        .data
+                                                                    as Map<
+                                                                        String,
+                                                                        dynamic>;
+                                                            if (registerResponseData[
+                                                                    'success'] ==
+                                                                false) {
+                                                              ScaffoldMessenger
+                                                                      .of(
+                                                                          context)
+                                                                  .showSnackBar(
+                                                                      SnackBar(
+                                                                content: Text(
+                                                                  registerResponseData[
+                                                                      'message'],
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    color: Colors
+                                                                        .red,
+                                                                  ),
+                                                                ),
+                                                              ));
+                                                            } else {
+                                                              final result =
+                                                                  await GraphQLClient(
+                                                                link: HttpLink(
+                                                                  'http://172.20.10.2:8080/graphql',
+                                                                ),
+                                                                cache: GraphQLCache(
+                                                                    store:
+                                                                        HiveStore()),
+                                                              ).query(
+                                                                QueryOptions(
+                                                                  document: gql(
+                                                                    r'''
+                                                                          query users($email: String!){
+                                                                            users (where: { createdBy: { equals: $email } }){
+                                                                              id
+                                                                              email
+                                                                            }
+                                                                          }
+                                                                          ''',
+                                                                  ),
+                                                                  variables: {
+                                                                    'email': _model
+                                                                        .emailAddressController2
+                                                                        .text,
+                                                                  },
+                                                                ),
+                                                              );
+                                                              await const FlutterSecureStorage().write(
+                                                                  key:
+                                                                      'accessToken',
+                                                                  value: registerResponseData[
+                                                                      'accessToken']);
+                                                              await const FlutterSecureStorage().write(
+                                                                  key: 'email',
+                                                                  value: _model
+                                                                      .emailAddressController2
+                                                                      .text);
+                                                              await const FlutterSecureStorage().write(
+                                                                  key:
+                                                                      'createdBy',
+                                                                  value: result
+                                                                              .data?[
+                                                                          'users']
+                                                                      [
+                                                                      0]['id']);
+                                                              await const FlutterSecureStorage().write(
+                                                                  key:
+                                                                      'refreshToken',
+                                                                  value: registerResponseData[
+                                                                      'refreshToken']);
+                                                              context.goNamed(
+                                                                  'home');
+                                                            }
+                                                          } catch (e) {
+                                                            print("error: $e");
+                                                          }
                                                         },
                                                         text: 'Sign In',
                                                         options:

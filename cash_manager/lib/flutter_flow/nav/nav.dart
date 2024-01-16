@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -27,10 +28,20 @@ class AppStateNotifier extends ChangeNotifier {
 
   bool showSplashImage = true;
 
-  void stopShowingSplashImage() {
+  Future stopShowingSplashImage() async {
     showSplashImage = false;
     notifyListeners();
   }
+}
+
+Future<bool> getInfo() async {
+  String? email = await const FlutterSecureStorage().read(
+    key: 'email',
+  );
+  String? id = await const FlutterSecureStorage().read(
+    key: 'createdBy',
+  );
+  return email != null && id != null;
 }
 
 GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
@@ -49,7 +60,29 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
                 ),
               ),
             )
-          : AuthentificationWidget(),
+          : FutureBuilder<bool>(
+              future: getInfo(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data!) {
+                    return NavBarPage(initialPage: 'Home');
+                  } else {
+                    return AuthentificationWidget();
+                  }
+                } else {
+                  return Builder(
+                    builder: (context) => Scaffold(
+                      backgroundColor: Colors.white,
+                      body: Center(
+                        child: Image.asset(
+                          'assets/images/logo.png',
+                          fit: BoxFit.fitWidth,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              }),
       routes: [
         FFRoute(
           name: '_initialize',
@@ -66,7 +99,29 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
                     ),
                   ),
                 )
-              : AuthentificationWidget(),
+              : FutureBuilder<bool>(
+                  future: getInfo(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data!) {
+                        return NavBarPage(initialPage: 'Home');
+                      } else {
+                        return AuthentificationWidget();
+                      }
+                    } else {
+                      return Builder(
+                        builder: (context) => Scaffold(
+                          backgroundColor: Colors.white,
+                          body: Center(
+                            child: Image.asset(
+                              'assets/images/logo.png',
+                              fit: BoxFit.fitWidth,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  }),
         ),
         FFRoute(
           name: 'Authentification',
@@ -80,6 +135,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
               params.isEmpty ? NavBarPage(initialPage: 'Home') : HomeWidget(),
         ),
         FFRoute(
+<<<<<<< HEAD
           name: 'Product',
           path: '/product',
           builder: (context, params) => ProductWidget(),
@@ -90,6 +146,8 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => CheckoutWidget(),
         ),
         FFRoute(
+=======
+>>>>>>> 492f1d6 (finished)
           name: 'Profile',
           path: '/profile',
           builder: (context, params) => params.isEmpty

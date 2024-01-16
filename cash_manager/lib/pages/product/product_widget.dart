@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+=======
+import 'package:cash_manager/pages/checkout/checkout_widget.dart';
+import 'package:cash_manager/pages/home/home_widget.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+
+>>>>>>> 492f1d6 (finished)
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_count_controller.dart';
 import '/flutter_flow/flutter_flow_drop_down.dart';
@@ -17,7 +24,19 @@ import 'product_model.dart';
 export 'product_model.dart';
 
 class ProductWidget extends StatefulWidget {
+<<<<<<< HEAD
   const ProductWidget({Key? key}) : super(key: key);
+=======
+  const ProductWidget(
+      {super.key,
+      required this.product,
+      required this.email,
+      required this.id});
+
+  final Products product;
+  final String email;
+  final String id;
+>>>>>>> 492f1d6 (finished)
 
   @override
   _ProductWidgetState createState() => _ProductWidgetState();
@@ -109,6 +128,43 @@ class _ProductWidgetState extends State<ProductWidget>
     super.dispose();
   }
 
+  Future<Map<String, dynamic>?> getCart() async {
+    final res = await GraphQLClient(
+      link: HttpLink(
+        'http://172.20.10.2:8080/graphql',
+      ),
+      cache: GraphQLCache(store: HiveStore()),
+    ).mutate(
+      MutationOptions(
+        document: gql(
+          r'''
+              query carts($email: String!) {
+                carts(where: { createdBy: { equals: $email } }) {
+                  id
+                  cartRows {
+                    id
+                    product {
+                      title
+                      price
+                    }
+                    rowPrice
+                    quantity
+                  }
+                  createdAt
+                  cartStatus
+                  totalPrice
+                }
+              }
+          ''',
+        ),
+        variables: {
+          'email': widget.email,
+        },
+      ),
+    );
+    return res.data;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (isiOS) {
@@ -120,6 +176,7 @@ class _ProductWidgetState extends State<ProductWidget>
       );
     }
 
+<<<<<<< HEAD
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
@@ -174,6 +231,45 @@ class _ProductWidgetState extends State<ProductWidget>
                 buttonSize: 48.0,
                 icon: Icon(
                   Icons.shopping_cart_outlined,
+=======
+    return FutureBuilder<Map<String, dynamic>?>(
+        future: getCart(),
+        builder: (context, snapshot) {
+          int length = 0;
+          int id = 0;
+          if (snapshot.data != null) {
+            if (snapshot.data?['carts'] != null) {
+              if (snapshot.data?['carts']?.isNotEmpty == true) {
+                id = snapshot.data?['carts']?[0]?['id'] as int;
+              }
+              if (snapshot.data?['carts']?[0]?['cartRows'] != null &&
+                  snapshot.data?['carts']?[0]?['cartRows']?.isNotEmpty ==
+                      true) {
+                for (var cartRows in snapshot.data?['carts']?[0]?['cartRows']) {
+                  if (cartRows != null && cartRows['quantity'] != null) {
+                    length += cartRows['quantity'] as int;
+                  }
+                }
+              }
+            }
+          }
+          return Scaffold(
+            key: scaffoldKey,
+            backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+            appBar: AppBar(
+              backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+              automaticallyImplyLeading: false,
+              leading: InkWell(
+                splashColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onTap: () async {
+                  context.pop();
+                },
+                child: Icon(
+                  Icons.arrow_back_rounded,
+>>>>>>> 492f1d6 (finished)
                   color: FlutterFlowTheme.of(context).secondaryText,
                   size: 30.0,
                 ),
@@ -211,6 +307,20 @@ class _ProductWidgetState extends State<ProductWidget>
                           fit: BoxFit.cover,
                         ),
                       ),
+<<<<<<< HEAD
+=======
+                      onPressed: () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CheckoutWidget(
+                              email: widget.email,
+                              userId: widget.id,
+                            ),
+                          ),
+                        );
+                      },
+>>>>>>> 492f1d6 (finished)
                     ),
                   ),
                   Padding(
@@ -285,8 +395,114 @@ class _ProductWidgetState extends State<ProductWidget>
                     ).animateOnPageLoad(
                         animationsMap['rowOnPageLoadAnimation']!),
                   ),
+<<<<<<< HEAD
                 ],
               ),
+=======
+                ),
+                Material(
+                  color: Colors.transparent,
+                  elevation: 3.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0.0),
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    height: 100.0,
+                    decoration: BoxDecoration(
+                      color: FlutterFlowTheme.of(context).primaryBackground,
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 4.0,
+                          color: Color(0x320F1113),
+                          offset: Offset(0.0, -2.0),
+                        )
+                      ],
+                      borderRadius: BorderRadius.circular(0.0),
+                    ),
+                    child: Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 34.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FFButtonWidget(
+                            onPressed: () async {
+                              await GraphQLClient(
+                                link: HttpLink(
+                                  'http://172.20.10.2:8080/graphql',
+                                ),
+                                cache: GraphQLCache(store: HiveStore()),
+                              ).mutate(
+                                MutationOptions(
+                                  document: gql(
+                                    r'''
+                                    mutation createOneCartRows(
+                                      $rowPrice: Float!
+                                      $quantity: Float!
+                                      $productId: BigInt!
+                                      $email: String!
+                                      $id: BigInt!
+                                    ) {
+                                      createOneCartRows(
+                                        data: {
+                                          cart: { connect: { id: $id } }
+                                          createdBy: $email
+                                          rowPrice: $rowPrice
+                                          quantity: $quantity
+                                          product: { connect: { id: $productId } }
+                                        }
+                                      ) {
+                                        id
+                                        rowPrice
+                                      }
+                                    }
+                                  ''',
+                                  ),
+                                  variables: {
+                                    'rowPrice': widget.product.price *
+                                        (_model.countControllerValue ??= 1),
+                                    'quantity': _model.countControllerValue ??=
+                                        1,
+                                    'productId': widget.product.id,
+                                    'email': widget.email,
+                                    'id': id,
+                                  },
+                                ),
+                              );
+                              setState(() {});
+                            },
+                            text: 'Add to Cart',
+                            options: FFButtonOptions(
+                              width: 130.0,
+                              height: 50.0,
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              color: FlutterFlowTheme.of(context).primary,
+                              textStyle: FlutterFlowTheme.of(context)
+                                  .titleSmall
+                                  .override(
+                                    fontFamily: 'Inter',
+                                    color: Colors.white,
+                                  ),
+                              elevation: 2.0,
+                              borderSide: BorderSide(
+                                color: Colors.transparent,
+                                width: 1.0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ).animateOnPageLoad(
+                    animationsMap['containerOnPageLoadAnimation']!),
+              ],
+>>>>>>> 492f1d6 (finished)
             ),
           ),
           Material(

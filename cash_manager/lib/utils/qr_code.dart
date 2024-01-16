@@ -42,15 +42,15 @@ class _QRCodeViewerState extends State<QRCodeViewer> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   if (result != null)
-                    Text(
-                        'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
+                    Text('Email: ${result!.code}')
                   else
                     const Text('Scan a code'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Container(//0UG>IlTc
+                      Container(
+                        //0UG>IlTc
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
                             onPressed: () async {
@@ -85,32 +85,6 @@ class _QRCodeViewerState extends State<QRCodeViewer> {
                       )
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.pauseCamera();
-                          },
-                          child: const Text('pause',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.resumeCamera();
-                          },
-                          child: const Text('resume',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      )
-                    ],
-                  ),
                 ],
               ),
             ),
@@ -130,7 +104,8 @@ class _QRCodeViewerState extends State<QRCodeViewer> {
     // we need to listen for Flutter SizeChanged notification and update controller
     return QRView(
       key: qrKey,
-      onQRViewCreated: _onQRViewCreated,
+      onQRViewCreated: (QRViewController controller) =>
+          _onQRViewCreated(controller, context),
       overlay: QrScannerOverlayShape(
           borderColor: Colors.red,
           borderRadius: 10,
@@ -141,14 +116,17 @@ class _QRCodeViewerState extends State<QRCodeViewer> {
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  void _onQRViewCreated(QRViewController controller, BuildContext) {
     setState(() {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) {
+      if (result != null) return;
       setState(() {
         result = scanData;
       });
+      print("back");
+      Navigator.pop(context, result!.code);
     });
   }
 
