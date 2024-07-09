@@ -1,0 +1,42 @@
+version: '3.3'
+services:
+  kapixapp:
+    restart: always
+    ports:
+      - 80:8080
+      - 443:8080
+    build:
+      dockerfile: Dockerfile.staging
+      context: .
+    depends_on:
+      - kapix-prisma-postgresdb
+        # condition: service_healthy
+    env_file:
+      - .env.staging
+    #volumes:
+    #  - type: bind
+    #    source: ./certbot
+    #    target: /home/certbot
+    # tty: true # interact with the shell
+    # stdin_open: true
+  kapix-prisma-postgresdb:
+    restart: always
+    container_name: cashmanager-postgresdb
+    image: postgres:15.2-bullseye
+    # healthcheck:
+    #   test: ['CMD-SHELL', 'pg_isready -d mydb']
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - '5772:5432'
+    environment:
+      PGDATA: /data/postgres
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: kapix
+      POSTGRES_DB: mydb
+    command: postgres -c autovacuum_max_workers=6 -c autovacuum_naptime=15 -c autovacuum_vacuum_scale_factor=0.05 -c autovacuum_analyze_scale_factor=0.05
+volumes:
+  postgres:

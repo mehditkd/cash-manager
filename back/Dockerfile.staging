@@ -1,0 +1,19 @@
+FROM node:16
+
+WORKDIR /user/src/app
+
+COPY package*.json ./
+
+RUN npm install -g pnpm
+RUN npm install -g dotenv-cli
+RUN pnpm install
+
+COPY . .
+
+RUN pnpm generate:staging
+RUN pnpm migrate:staging
+RUN pnpm build:staging
+
+EXPOSE 8080
+
+CMD [ "pnpm", "start:staging" ]
